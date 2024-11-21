@@ -20,8 +20,9 @@ namespace MLStartFirstStage
                 .WriteTo.File("logs/fatal.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Fatal)
                 .WriteTo.Console()
                 .CreateLogger();
+            Log.Information("Logger configuration was successful.");
 
-            var fileName = "MLstartConfig.json";
+            var fileName = "FirstStageConfig.json";
             var content = @"{""N"": ""8"", ""L"": ""5""}";
             File.WriteAllText(fileName, content);
 
@@ -30,18 +31,23 @@ namespace MLStartFirstStage
                 .GetCurrentDirectory())
                 .AddJsonFile(fileName).Build();
 
-            string N = configuration["N"];
-            string L = configuration["L"];
-            Console.WriteLine(N);
-            Console.WriteLine(L);
+            int N = int.Parse(configuration["N"]);
+            int L = int.Parse(configuration["L"]);
+            Log.Debug($"N: {N}; L: {L}");
 
             int[] oddNumbers = CreateOddNumbersArray();
             double[] randomValues = CreateRandomValuesArray();
             double[,] k = CreateTwoDimensionalArray(8, 13, oddNumbers, randomValues);
+            double minElement = FindMinElement(N, k);
+            double averageElement = FindAverageElement(L, k);
+            Console.WriteLine($"minElement: {minElement:F4}");
+            Console.WriteLine($"averageElement: {averageElement:F4}");
+            ;
         }
 
         static int[] CreateOddNumbersArray()
         {
+            Log.Verbose("Start CreateOddNumbersArray method.");
             int start = 5;
             int end = 19;
             int oddNumbersSize = (end - start) / 2 + 1;
@@ -52,11 +58,13 @@ namespace MLStartFirstStage
                 oddNumbers[i] = num;
             }
 
+            Log.Verbose("End CreateOddNumbersArray method.");
             return oddNumbers;
         }
 
         static double[] CreateRandomValuesArray()
         {
+            Log.Verbose("Start CreateRandomValuesArray method.");
             double min = -12.0;
             double max = 15.0;
             int randomValuesSize = 13;
@@ -69,11 +77,13 @@ namespace MLStartFirstStage
                 randomValues[i] = min + random.NextDouble() * (max - min);
             }
 
+            Log.Verbose("End CreateRandomValuesArray method.");
             return randomValues;
         }
 
         static double[,] CreateTwoDimensionalArray(int rows, int columns, int[] oddNumbers, double[] randomValues)
         {
+            Log.Verbose("Start CreateTwoDimensionalArray method.");
             double[,] k = new double[rows, columns];
             
             for(int i = 0; i < rows; i++)
@@ -95,7 +105,28 @@ namespace MLStartFirstStage
                 }
             }
 
+            Log.Verbose("End CreateTwoDimensionalArray method.");
             return k;
+        }
+
+        static double FindMinElement(int N, double[,] k)
+        {
+            Log.Verbose("Start FindMinElement method.");
+            int i = N % 8;
+            double minElement = Enumerable.Range(0, 13).Select(col => k[i, col]).Min();
+
+            Log.Verbose("End FindMinElement method.");
+            return minElement;
+        }
+
+        static double FindAverageElement(int L, double[,] k)
+        {
+            Log.Verbose("Start FindAverageElement method.");
+            int j = L % 13;
+            double averageElement = Enumerable.Range(0, 8).Select(row => k[row, j]).Average();
+
+            Log.Verbose("End FindAverageElement method.");
+            return averageElement;
         }
     }
 }
