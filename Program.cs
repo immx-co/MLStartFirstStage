@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using System.Drawing;
+using Serilog;
 
 
 namespace MLStartFirstStage
@@ -9,6 +10,17 @@ namespace MLStartFirstStage
     {
         static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.File("logs/verbose.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Verbose)
+                .WriteTo.File("logs/debug.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug)
+                .WriteTo.File("logs/info.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+                .WriteTo.File("logs/warning.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                .WriteTo.File("logs/error.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+                .WriteTo.File("logs/fatal.log", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Fatal)
+                .WriteTo.Console()
+                .CreateLogger();
+
             var fileName = "MLstartConfig.json";
             var content = @"{""N"": ""8"", ""L"": ""5""}";
             File.WriteAllText(fileName, content);
