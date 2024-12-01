@@ -6,7 +6,7 @@
 
         public void UniqueTask()
         {
-            Console.WriteLine("Поднимаюсь на горные вершины.");
+            Console.WriteLine("Поднимаюсь на горным вершинам.");
         }
 
         public string Ability()

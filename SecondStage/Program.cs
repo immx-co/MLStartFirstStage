@@ -16,13 +16,22 @@ namespace SecondStage
             double[] someValues = CreateRandomValuesArray();
 
             Kingdom kingdom = new();
-            kingdom.AddFigure(new Circle());
-            kingdom.AddFigure(new Triangle());
-            kingdom.AddFigure(new Square());
-            kingdom.AddFigure(new Rectangle());
+            Circle circle = new Circle();
+            Triangle triangle = new Triangle();
+            Square square = new Square();
+            Rectangle rectangle = new Rectangle();
+            kingdom.AddFigure(circle);
+            kingdom.AddFigure(triangle);
+            kingdom.AddFigure(square);
+            kingdom.AddFigure(rectangle);
 
             IFigure[] allFigures = kingdom.GetFigures();
             Console.WriteLine(kingdom.GetFigures());
+
+            circle.UniqueTask();
+            triangle.UniqueTask();
+            square.UniqueTask();
+            rectangle.UniqueTask();
         }
 
         static double[] CreateRandomValuesArray()
