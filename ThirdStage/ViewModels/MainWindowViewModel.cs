@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Converters;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using ClassLibrary;
@@ -17,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand AddSquareCommand { get; init; }
     public ICommand AddTriangleCommand { get; init; }
     public ICommand AddRectangleCommand { get; init; }
+    public ICommand FigureActionCommand { get; init; }
 
     private ObservableCollection<Control> _dynamicFigures = [];
 
@@ -29,8 +31,6 @@ public partial class MainWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(DynamicFigures));
         }
     }
-
-    private static Shape figureType;
 
     private int _countsFigures = 0;
     public int CountFigures
@@ -60,6 +60,12 @@ public partial class MainWindowViewModel : ViewModelBase
         AddSquareCommand = ReactiveCommand.Create(AddSquare);
         AddTriangleCommand = ReactiveCommand.Create(AddTriangle);
         AddRectangleCommand = ReactiveCommand.Create(AddRectangle);
+        FigureActionCommand = ReactiveCommand.Create(ExecuteFigureAction);
+    }
+
+    private void ExecuteFigureAction()
+    {
+        ;
     }
 
     private void AddCircle()
@@ -107,41 +113,44 @@ public partial class MainWindowViewModel : ViewModelBase
         Debug.WriteLine($"Called AddFigureContent {figure}");
         Shape figureType = GetFigureType(figure);
         DynamicFigures.Add(figureType);
+        OnPropertyChanged(nameof(DynamicFigures));
     }
 
     private static Shape GetFigureType(IFigure figure)
     {
         if (figure.GetType() == typeof(Circle))
         {
-            var figureType = new Ellipse
+            return new Ellipse
             {
                 Width = 10,
                 Height = 10,
                 Fill = Brushes.OrangeRed,
                 Stroke = Brushes.Black,
-                StrokeThickness = 2
+                StrokeThickness = 2,
+                Margin = new Avalonia.Thickness(5, 5)
             };
         }
         else if (figure.GetType() == typeof(Square))
         {
-            var figureType = new Avalonia.Controls.Shapes.Rectangle
+            return new Avalonia.Controls.Shapes.Rectangle
             {
                 Width = 10,
                 Height = 10,
                 Fill = Brushes.Firebrick,
                 Stroke = Brushes.Black,
-                StrokeThickness = 2
+                StrokeThickness = 2,
+                Margin = new Avalonia.Thickness(5, 5)
             };
         }
         else if (figure.GetType() == typeof(Triangle))
         {
             PathGeometry pathGeometry = new PathGeometry();
             PathFigure pathFigure = new PathFigure();
-            pathFigure.StartPoint = new Avalonia.Point(0, 100);
+            pathFigure.StartPoint = new Avalonia.Point(0, 10);
             LineSegment lineSegment1 = new LineSegment();
-            lineSegment1.Point = new Avalonia.Point(50, 0);
+            lineSegment1.Point = new Avalonia.Point(5, 0);
             LineSegment lineSegment2 = new LineSegment();
-            lineSegment2.Point = new Avalonia.Point(100, 100);
+            lineSegment2.Point = new Avalonia.Point(10, 10);
 
             pathFigure.Segments.Add(lineSegment1);
             pathFigure.Segments.Add(lineSegment2);
@@ -157,18 +166,20 @@ public partial class MainWindowViewModel : ViewModelBase
             figureType.StrokeThickness = 2;
             figureType.Width = 10;
             figureType.Height = 10;
+            figureType.Margin = new Avalonia.Thickness(5, 5);
+            return figureType;
         }
         else
         {
-            var figureType = new Avalonia.Controls.Shapes.Rectangle
+            return new Avalonia.Controls.Shapes.Rectangle
             {
                 Width = 15,
                 Height = 7,
                 Fill = Brushes.Cyan,
                 Stroke = Brushes.Black,
-                StrokeThickness = 2
+                StrokeThickness = 2,
+                Margin = new Avalonia.Thickness(5, 5)
             };
         }
-        return figureType;
     }
 }

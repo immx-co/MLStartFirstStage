@@ -1,4 +1,6 @@
-﻿namespace ClassLibrary
+﻿using System.Diagnostics;
+
+namespace ClassLibrary
 {
     public class Rectangle : IFigure, IQuantityCoal
     {
@@ -6,7 +8,7 @@
 
         public void UniqueTask()
         {
-            Console.WriteLine("Соединяю дороги.");
+            Debug.WriteLine("Соединяю дороги.");
         }
 
         public string Ability()
