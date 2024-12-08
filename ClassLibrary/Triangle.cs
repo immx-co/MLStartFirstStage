@@ -1,4 +1,6 @@
-﻿namespace ClassLibrary
+﻿using System.Diagnostics;
+
+namespace ClassLibrary
 {
     public class Triangle : IFigure, IQuantityCoal
     { 
@@ -6,12 +8,12 @@
 
         public void UniqueTask()
         {
-            Console.WriteLine("Поднимаюсь на горным вершинам.");
+            Debug.WriteLine("Поднимаюсь на горным вершинам.");
         }
 
         public string Ability()
         {
-            return $"Благодаря своим {CoalQuantity} углам, обеспечивая стабильность конструкций.";
+            return $"Благодаря своим {CoalQuantity} углам, обеспечиваю стабильность конструкций.";
         }
     }
 }

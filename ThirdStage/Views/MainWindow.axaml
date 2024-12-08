@@ -34,8 +34,7 @@
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
 
       <StackPanel Grid.Row="0" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -81,22 +80,21 @@
         <ItemsControl ItemsSource="{Binding DynamicFigures}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" />
+              <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" MaxWidth="600"/>
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <StackPanel Margin="10" HorizontalAlignment="Center">
-                <ContentPresenter Content="{Binding}"/>
-                <Button Content="Действие" Margin="0,5,0,0" BorderBrush="Red" BorderThickness="2"
-                        Command="{Binding DataContext.FigureActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+                <ContentPresenter Content="{Binding Figure}" />
+                <Button Content="Действие"
+                        Command="{Binding ActionCommand}"
+                        Margin="0,5,0,0"/>
               </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
-
     </Grid>
   </Panel>
-  
 </Window>

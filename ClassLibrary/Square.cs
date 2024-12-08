@@ -1,4 +1,6 @@
-﻿namespace ClassLibrary
+﻿using System.Diagnostics;
+
+namespace ClassLibrary
 {
     public class Square : IFigure, IQuantityCoal
     {
@@ -6,7 +8,7 @@
 
         public void UniqueTask()
         {
-            Console.WriteLine("Создаю надежность.");
+            Debug.WriteLine("Создаю надежность.");
         }
 
         public string Ability()

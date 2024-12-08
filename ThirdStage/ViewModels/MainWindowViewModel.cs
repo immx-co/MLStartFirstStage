@@ -20,9 +20,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand AddRectangleCommand { get; init; }
     public ICommand FigureActionCommand { get; init; }
 
-    private ObservableCollection<Control> _dynamicFigures = [];
-
-    public ObservableCollection<Control> DynamicFigures
+    private ObservableCollection<FigureViewModel> _dynamicFigures = new();
+    public ObservableCollection<FigureViewModel> DynamicFigures
     {
         get => _dynamicFigures;
         set
@@ -108,11 +107,23 @@ public partial class MainWindowViewModel : ViewModelBase
         Debug.WriteLine("Rectangle added.");
     }
 
+    private void ExecuteFigureAction(IFigure figure)
+    {
+        LastAction = figure.Ability();
+        figure.UniqueTask();
+        //LastAction = $"Action performed on {figure.GetType().Name}.";
+    }
+
     private void AddFigureContent(IFigure figure)
     {
-        Debug.WriteLine($"Called AddFigureContent {figure}");
         Shape figureType = GetFigureType(figure);
-        DynamicFigures.Add(figureType);
+
+        DynamicFigures.Add(new FigureViewModel
+        {
+            Figure = figureType,
+            ActionCommand = ReactiveCommand.Create(() => ExecuteFigureAction(figure))
+        });
+
         OnPropertyChanged(nameof(DynamicFigures));
     }
 

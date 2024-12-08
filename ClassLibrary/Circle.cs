@@ -1,4 +1,6 @@
-﻿namespace ClassLibrary
+﻿using System.Diagnostics;
+
+namespace ClassLibrary
 {
     public class Circle : IFigure, IQuantityCoal
     {
@@ -6,7 +8,7 @@
 
         public void UniqueTask()
         {
-            Console.WriteLine("Двигаюсь по маршрутам, очищая путь от препятствий.");
+            Debug.WriteLine("Двигаюсь по маршрутам, очищая путь от препятствий.");
         }
 
         public string Ability()
