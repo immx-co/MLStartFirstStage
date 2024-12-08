@@ -33,6 +33,8 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
       <StackPanel Grid.Row="0" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -41,33 +43,39 @@
         <Path Data="M 0,100 L 50,0 L 100,100 Z" Fill="GreenYellow" Stroke="Black" StrokeThickness="2" Width="100" Height="100" HorizontalAlignment="Left"/>
         <Rectangle Width="150" Height="75" Fill="Cyan" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left"/>
       </StackPanel>
-
+      
       <StackPanel Grid.Row="1" Margin="0,20" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Button Width="100" HorizontalContentAlignment="Center">
+        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddCircleCommand}">
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
             <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
           </StackPanel>
         </Button>
-        <Button Width="100" HorizontalContentAlignment="Center">
+        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddSquareCommand}">
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
             <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
           </StackPanel>
         </Button>
-        <Button Width="100" HorizontalContentAlignment="Center">
+        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddTriangleCommand}">
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
             <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
           </StackPanel>
         </Button>
-        <Button Width="150" HorizontalContentAlignment="Center">
+        <Button Width="150" HorizontalContentAlignment="Center" Command="{Binding AddRectangleCommand}">
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
             <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
           </StackPanel>
         </Button>
       </StackPanel>
+
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <TextBlock Grid.Row="2" Text="{Binding CountFigures}"></TextBlock>
+        <TextBlock Grid.Row="3" Text="{Binding LastAction}" Margin="20, 0"></TextBlock>
+      </StackPanel>
+      
     </Grid>
   </Panel>
   

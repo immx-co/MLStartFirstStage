@@ -23,5 +23,10 @@
         {
             return figures.ToArray();
         }
+
+        public int GetLenFigures()
+        {
+            return figures.Count;
+        }
     }
 }
