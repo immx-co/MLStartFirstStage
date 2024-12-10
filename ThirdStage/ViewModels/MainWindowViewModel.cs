@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.Converters;
-using Avalonia.Controls.Shapes;
+﻿using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using ClassLibrary;
 using ReactiveUI;

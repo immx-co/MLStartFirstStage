@@ -31,4 +31,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\AutorizationWindow.axaml.cs">
+      <DependentUpon>AutorizationWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
