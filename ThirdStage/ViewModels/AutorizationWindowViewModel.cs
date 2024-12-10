@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using MsBox.Avalonia;
+using ReactiveUI;
 using System;
 using System.Linq;
 using System.Reactive;
@@ -60,13 +61,14 @@ public partial class AutorizationWindowViewModel : ViewModelBase
         {
             Nickname = string.Empty;
             Password = string.Empty;
+            ShowMessageBox("Invalid username", "Такого имени пользователя не существует!");
             return;
         }
         bool unHashedPassword = _hasher.VerifyPassword(Password, dbUser.HashPassword);
         if (!unHashedPassword)
         {
-            Nickname = string.Empty;
             Password = string.Empty;
+            ShowMessageBox("Invalid password", "Неверный пароль! Попробуйте еще раз.");
             return;
         }
         OpenMainWindow();
@@ -80,6 +82,12 @@ public partial class AutorizationWindowViewModel : ViewModelBase
         db.Users.AddRange(authUser);
         db.SaveChanges();
         OpenMainWindow();
+    }
+
+    private void ShowMessageBox(string caption, string message)
+    {
+        var messageBoxStandardWindow = MessageBoxManager.GetMessageBoxStandard(caption, message);
+        messageBoxStandardWindow.ShowAsync();
     }
 
     private void OpenMainWindow()
