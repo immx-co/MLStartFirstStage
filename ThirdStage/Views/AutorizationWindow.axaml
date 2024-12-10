@@ -7,8 +7,18 @@
         x:Class="ThirdStage.Views.AutorizationWindow"
         x:DataType="vm:AutorizationWindowViewModel"
         Title="AutorizationWindow">
-  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-    <TextBlock Text="This is the Second Window" Margin="0,0,0,20"/>
-    <Button Content="Open Main Window" Command="{Binding OpenMainWindowCommand}"/>
-  </StackPanel>
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <StackPanel HorizontalAlignment="Center">
+        <TextBlock Text="Input into Kingdom" Margin="0,0,0,20"/>
+      </StackPanel>
+      <TextBox Text="{Binding Nickname}" Width="200" Height="30" Watermark="User" Margin="0, 5"/>
+      <TextBox Text="{Binding Password}" Width="200" Height="30" Watermark="Password" Margin="0, 5, 0, 50" PasswordChar="*"/>
+      <StackPanel Orientation="Horizontal">
+        <Button Content="Login" Command="{Binding LoginCommand}"/>
+        <Button Content="Autorization" Command="{Binding AutorizationCommand}"/>
+      </StackPanel>
+    </StackPanel>
+  
+  
 </Window>
