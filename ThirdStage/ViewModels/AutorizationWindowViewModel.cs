@@ -1,9 +1,8 @@
 ﻿using ReactiveUI;
-using System.Reactive;
 using System;
-using ThirdStage.Database;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using ThirdStage.Database;
 
 namespace ThirdStage.ViewModels;
 
@@ -27,7 +26,7 @@ public partial class AutorizationWindowViewModel : ViewModelBase
         set
         {
             _nickname = value;
-            OnPropertyChanged(nameof(User));
+            OnPropertyChanged(nameof(Nickname));
         }
     }
 
@@ -59,11 +58,15 @@ public partial class AutorizationWindowViewModel : ViewModelBase
         User? dbUser = db.Users.SingleOrDefault(user => user.Name == Nickname);
         if (dbUser is null)
         {
+            Nickname = string.Empty;
+            Password = string.Empty;
             return;
         }
         bool unHashedPassword = _hasher.VerifyPassword(Password, dbUser.HashPassword);
         if (!unHashedPassword)
         {
+            Nickname = string.Empty;
+            Password = string.Empty;
             return;
         }
         OpenMainWindow();
