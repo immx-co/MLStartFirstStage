@@ -24,14 +24,12 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
 
-            //desktop.MainWindow = new AutorizationWindow
+            desktop.MainWindow = new AutorizationWindow();
+
+            //desktop.MainWindow = new MainWindow
             //{
-            //    DataContext = new AutorizationWindowViewModel()
+            //    DataContext = new MainWindowViewModel(),
             //};
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
         }
 
         base.OnFrameworkInitializationCompleted();

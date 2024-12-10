@@ -9,6 +9,6 @@
         Title="AutorizationWindow">
   <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
     <TextBlock Text="This is the Second Window" Margin="0,0,0,20"/>
-    <Button Content="Open Main Window"/>
+    <Button Content="Open Main Window" Command="{Binding OpenMainWindowCommand}"/>
   </StackPanel>
 </Window>
