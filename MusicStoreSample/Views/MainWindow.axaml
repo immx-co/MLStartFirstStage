@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicStoreSample.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MusicStoreSample.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MusicStoreSample"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+  
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial
+          BackgroundSource="Digger"
+          TintColor="Black"
+          TintOpacity="1"
+          MaterialOpacity="0.65">
+        </ExperimentalAcrylicMaterial>
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
+    <Button
+      HorizontalAlignment="Right"
+      VerticalAlignment="Top"
+      Command="{Binding BuyMusicCommand}">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <PathIcon Data="{StaticResource building_shop_regular}"></PathIcon>
+        <TextBlock Text="Click Me" Margin="10,0,0,0" VerticalAlignment="Center"/>
+      </StackPanel>
+      
+    </Button>
+  </Panel>
+
+</Window>
