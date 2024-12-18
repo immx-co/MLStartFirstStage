@@ -114,13 +114,18 @@ public partial class AutorizationWindowViewModel : ViewModelBase
         User authUser = new User { Name = Nickname, HashPassword = hashedPassword };
         db.Users.AddRange(authUser);
         db.SaveChanges();
-        OpenMainWindow();
+        ShowMessageBoxSuccessRegistration(Nickname);
     }
 
     private void ShowMessageBox(string caption, string message)
     {
         var messageBoxStandardWindow = MessageBoxManager.GetMessageBoxStandard(caption, message);
         messageBoxStandardWindow.ShowAsync();
+    }
+
+    private void ShowMessageBoxSuccessRegistration(string username)
+    {
+        ShowMessageBox("Success", $"Регистрация пользователя {username} прошла успешно!");
     }
 
     private void OpenMainWindow()

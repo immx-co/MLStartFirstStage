@@ -18,83 +18,113 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-  <Panel>
-    <ExperimentalAcrylicBorder IsHitTestVisible="False">
-      <ExperimentalAcrylicBorder.Material>
-        <ExperimentalAcrylicMaterial
-          BackgroundSource="Digger"
-          TintColor="Black"
-          TintOpacity="1"
-          MaterialOpacity="0.65">
-        </ExperimentalAcrylicMaterial>
-      </ExperimentalAcrylicBorder.Material>
-    </ExperimentalAcrylicBorder>
-    <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition Width="*"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+      </Grid.ColumnDefinitions>
 
-      <StackPanel Grid.Row="0" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Ellipse Width="100" Height="100" Fill="OrangeRed" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Rectangle Width="100" Height="100" Fill="Firebrick" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Path Data="M 0,100 L 50,0 L 100,100 Z" Fill="GreenYellow" Stroke="Black" StrokeThickness="2" Width="100" Height="100" HorizontalAlignment="Left"/>
-        <Rectangle Width="150" Height="75" Fill="Cyan" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left"/>
-      </StackPanel>
+      <TextBox Grid.Column="0"
+                Name="HistoryTextBox"
+                Text="{Binding UserHistory, Mode=TwoWay}"
+                Width="300"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                HorizontalAlignment="Stretch"
+                Margin="10"
+                FontSize="14">
+      </TextBox>
+    
+      <Panel Grid.Column="1">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+          <ExperimentalAcrylicBorder.Material>
+            <ExperimentalAcrylicMaterial
+              BackgroundSource="Digger"
+              TintColor="Black"
+              TintOpacity="1"
+              MaterialOpacity="0.65">
+            </ExperimentalAcrylicMaterial>
+          </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+
+          <StackPanel Grid.Row="0" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Ellipse Width="100" Height="100" Fill="OrangeRed" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Rectangle Width="100" Height="100" Fill="Firebrick" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Path Data="M 0,100 L 50,0 L 100,100 Z" Fill="GreenYellow" Stroke="Black" StrokeThickness="2" Width="100" Height="100" HorizontalAlignment="Left"/>
+            <Rectangle Width="150" Height="75" Fill="Cyan" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left"/>
+          </StackPanel>
       
-      <StackPanel Grid.Row="1" Margin="0,20" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddCircleCommand}">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
-            <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
-        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddSquareCommand}">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
-            <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
-        <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddTriangleCommand}">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
-            <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
-        <Button Width="150" HorizontalContentAlignment="Center" Command="{Binding AddRectangleCommand}">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
-            <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
-          </StackPanel>
-        </Button>
-      </StackPanel>
-
-      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <TextBlock Text="{Binding CountFigures}"></TextBlock>
-        <TextBlock Text="{Binding LastAction}" Margin="20, 0"></TextBlock>
-      </StackPanel>
-
-      <ScrollViewer Grid.Row="3" Margin="0,20" VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding DynamicFigures}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" MaxWidth="600"/>
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Margin="10" HorizontalAlignment="Center">
-                <ContentPresenter Content="{Binding Figure}" />
-                <Button Content="Действие"
-                        Command="{Binding ActionCommand}"
-                        Margin="0,5,0,0"/>
+          <StackPanel Grid.Row="1" Margin="0,20" Spacing="50" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddCircleCommand}">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
+                <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
               </StackPanel>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </Grid>
-  </Panel>
+            </Button>
+            <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddSquareCommand}">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
+                <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Width="100" HorizontalContentAlignment="Center" Command="{Binding AddTriangleCommand}">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
+                <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button Width="150" HorizontalContentAlignment="Center" Command="{Binding AddRectangleCommand}">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <PathIcon Data="{StaticResource people_community_add_regular}"></PathIcon>
+                <TextBlock Text="Добавить" FontSize="12" Margin="5,0,0,0" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="{Binding CountFigures}"></TextBlock>
+            <TextBlock Text="{Binding LastAction}" Margin="20, 0"></TextBlock>
+          </StackPanel>
+
+          <ScrollViewer Grid.Row="3" Margin="0,20" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding DynamicFigures}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" MaxWidth="600"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Margin="10" HorizontalAlignment="Center">
+                    <ContentPresenter Content="{Binding Figure}" />
+                    <Button Content="Действие"
+                            Command="{Binding ActionCommand}"
+                            Margin="0,5,0,0"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Grid>
+      </Panel>
+
+      <TextBox Grid.Column="2"
+                Name="UserHistoryTextBox"
+                Text="{Binding UserHistory, Mode=TwoWay}"
+                Width="300"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                HorizontalAlignment="Right"
+                Margin="10"
+                FontSize="14">
+      </TextBox>
+  </Grid>
 </Window>

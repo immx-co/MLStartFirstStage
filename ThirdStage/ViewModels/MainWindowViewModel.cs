@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using ClassLibrary;
 using ReactiveUI;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -51,6 +52,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private string _userHistory = "Пользовательская история:";
+    public string UserHistory
+    {
+        get => _userHistory;
+        set
+        {
+            _userHistory = value;
+            OnPropertyChanged(nameof(UserHistory));
+        }
+    }
+
     public MainWindowViewModel()
     {
         AddCircleCommand = ReactiveCommand.Create(AddCircle);
@@ -71,6 +83,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _kingdom.AddFigure(circle);
         CountFigures = _kingdom.GetLenFigures();
         LastAction = "Circle added.";
+        UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(circle);
         Debug.WriteLine("Circle added.");
     }
@@ -81,6 +94,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _kingdom.AddFigure(square);
         CountFigures = _kingdom.GetLenFigures();
         LastAction = "Square added.";
+        UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(square);
         Debug.WriteLine("Sqaure added.");
     }
@@ -91,6 +105,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _kingdom.AddFigure(triangle);
         CountFigures = _kingdom.GetLenFigures();
         LastAction = "Triangle added.";
+        UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(triangle);
         Debug.WriteLine("Triangle added.");
     }
@@ -101,6 +116,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _kingdom.AddFigure(rectangle);
         CountFigures = _kingdom.GetLenFigures();
         LastAction = "Rectangle added.";
+        UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(rectangle);
         Debug.WriteLine("Rectangle added.");
     }
@@ -108,8 +124,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private void ExecuteFigureAction(IFigure figure)
     {
         LastAction = figure.Ability();
+        UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         figure.UniqueTask();
-        //LastAction = $"Action performed on {figure.GetType().Name}.";
     }
 
     private void AddFigureContent(IFigure figure)
