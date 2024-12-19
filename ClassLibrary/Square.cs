@@ -2,7 +2,7 @@
 
 namespace ClassLibrary
 {
-    public class Square : IFigure, IQuantityCoal
+    public class Square : IFigure, IQuantityCorner
     {
         public int CoalQuantity { get; } = 4;
 

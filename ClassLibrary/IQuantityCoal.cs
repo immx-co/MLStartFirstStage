@@ -1,6 +1,6 @@
 ﻿namespace ClassLibrary
 {
-    public interface IQuantityCoal
+    public interface IQuantityCorner
     {
         int CoalQuantity { get; }
     }
