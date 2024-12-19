@@ -6,6 +6,8 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using ThirdStage.ViewModels;
 using ThirdStage.Views;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace ThirdStage;
 
@@ -24,7 +26,13 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
 
-            desktop.MainWindow = new AutorizationWindow();
+            string fileName = "MLstartConfig.json";
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory
+                .GetCurrentDirectory())
+                .AddJsonFile(fileName).Build();
+
+            desktop.MainWindow = new AutorizationWindow(configuration);
 
             //desktop.MainWindow = new MainWindow
             //{

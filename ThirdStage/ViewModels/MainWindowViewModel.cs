@@ -1,10 +1,13 @@
 ﻿using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Avalonia.Threading;
 using ClassLibrary;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ThirdStage.ViewModels;
@@ -17,7 +20,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand AddSquareCommand { get; init; }
     public ICommand AddTriangleCommand { get; init; }
     public ICommand AddRectangleCommand { get; init; }
-    public ICommand FigureActionCommand { get; init; }
 
     private ObservableCollection<FigureViewModel> _dynamicFigures = new();
     public ObservableCollection<FigureViewModel> DynamicFigures
@@ -63,18 +65,25 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private string _history = "Программная история:";
+    public string History
+    {
+        get => _history;
+        set
+        {
+            _history = value;
+            OnPropertyChanged(nameof(History));
+        }
+    }
+
     public MainWindowViewModel()
     {
         AddCircleCommand = ReactiveCommand.Create(AddCircle);
         AddSquareCommand = ReactiveCommand.Create(AddSquare);
         AddTriangleCommand = ReactiveCommand.Create(AddTriangle);
         AddRectangleCommand = ReactiveCommand.Create(AddRectangle);
-        FigureActionCommand = ReactiveCommand.Create(ExecuteFigureAction);
-    }
 
-    private void ExecuteFigureAction()
-    {
-        ;
+        Task.Run(GenerateProgrammHistoryAsync);
     }
 
     private void AddCircle()
@@ -141,6 +150,36 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(DynamicFigures));
     }
 
+    private async Task GenerateProgrammHistoryAsync()
+    {
+        while (true)
+        {
+            await Task.Delay(2000);
+            IFigure? randomFigure = GetRandomFigure(_kingdom.GetFigures());
+            if (randomFigure is null)
+            {
+                continue;
+            }
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                History += Environment.NewLine + Environment.NewLine + randomFigure.Ability();
+            });
+        }
+        
+    }
+
+    private static IFigure? GetRandomFigure(List<IFigure> figuresList)
+    {
+        if (figuresList == null || figuresList.Count == 0)
+        {
+            return null;
+        }
+
+        Random random = new Random();
+        int randomIndex = random.Next(0, figuresList.Count);
+        return figuresList[randomIndex];
+    }
+
     private static Shape GetFigureType(IFigure figure)
     {
         if (figure.GetType() == typeof(Circle))
@@ -203,7 +242,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 Fill = Brushes.Cyan,
                 Stroke = Brushes.Black,
                 StrokeThickness = 2,
-                Margin = new Avalonia.Thickness(5, 5)
+                Margin = new Avalonia.Thickness(5, 6.4)
             };
         }
     }

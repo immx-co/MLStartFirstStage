@@ -1,15 +1,17 @@
 using Avalonia.Controls;
+using Microsoft.Extensions.Configuration;
 using ThirdStage.ViewModels;
 
 namespace ThirdStage.Views;
 
 public partial class AutorizationWindow : Window
 {
-    public AutorizationWindow()
+    public AutorizationWindow(IConfiguration configuration)
     {
         InitializeComponent();
 
         DataContext = new AutorizationWindowViewModel(
+                configuration,
                 openMainWindow: () =>
                 {
                     var mainWindow = new MainWindow

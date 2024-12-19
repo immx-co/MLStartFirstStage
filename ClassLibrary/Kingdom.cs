@@ -19,9 +19,9 @@
             figures.Add(figure);
         }
 
-        public IFigure[] GetFigures()
+        public List<IFigure> GetFigures()
         {
-            return figures.ToArray();
+            return figures;
         }
 
         public int GetLenFigures()

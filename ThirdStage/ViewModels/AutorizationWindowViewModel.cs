@@ -7,11 +7,15 @@ using System.Reactive;
 using ThirdStage.Database;
 using System.Text.RegularExpressions;
 using System.Reactive.Joins;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace ThirdStage.ViewModels;
 
 public partial class AutorizationWindowViewModel : ViewModelBase
 {
+    DbContextOptionsBuilder<ApplicationContext> optionsBuilder;
+
     public ReactiveCommand<Unit, Unit> OpenMainWindowCommand { get; }
     public ReactiveCommand<Unit, Unit> CloseWindowCommand { get; }
     public ReactiveCommand<Unit, Unit> LoginCommand { get; }
@@ -47,8 +51,11 @@ public partial class AutorizationWindowViewModel : ViewModelBase
     string nicknamePattern = @"^[а-яА-Яa-zA-Z0-9]+$";
 
 
-    public AutorizationWindowViewModel(Action openMainWindow, Action closeThisWindow)
+    public AutorizationWindowViewModel(IConfiguration configuration, Action openMainWindow, Action closeThisWindow)
     {
+        optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+        optionsBuilder.UseNpgsql(configuration["stringConnection"]);
+
         _openMainWindow = openMainWindow;
         _closeWindow = closeThisWindow;
         OpenMainWindowCommand = ReactiveCommand.Create(OpenMainWindow);
@@ -61,7 +68,7 @@ public partial class AutorizationWindowViewModel : ViewModelBase
 
     private void Login()
     {
-        using ApplicationContext db = new ApplicationContext();
+        using ApplicationContext db = new ApplicationContext(optionsBuilder.Options);
         User? dbUser = db.Users.SingleOrDefault(user => user.Name == Nickname);
         if (dbUser is null)
         {
@@ -102,7 +109,7 @@ public partial class AutorizationWindowViewModel : ViewModelBase
             ShowMessageBox("Invalid password", "Пароль должен быть не менее 3х символов! Попробуйте еще раз.");
             return;
         }
-        using ApplicationContext db = new ApplicationContext();
+        using ApplicationContext db = new ApplicationContext(optionsBuilder.Options);
         List<User> dbUsers = db.Users.ToList();
         if (dbUsers.Any(user => user.Name == Nickname))
         {

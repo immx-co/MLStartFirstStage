@@ -7,6 +7,8 @@
         x:Class="ThirdStage.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
+        MinHeight="500"
+        MinWidth="1500"
         Title="ThirdStage"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
@@ -26,7 +28,7 @@
       </Grid.ColumnDefinitions>
 
       <TextBox Grid.Column="0"
-                Name="HistoryTextBox"
+                Name="UserHistoryTextBox"
                 Text="{Binding UserHistory, Mode=TwoWay}"
                 Width="300"
                 AcceptsReturn="True"
@@ -117,8 +119,8 @@
       </Panel>
 
       <TextBox Grid.Column="2"
-                Name="UserHistoryTextBox"
-                Text="{Binding UserHistory, Mode=TwoWay}"
+                Name="HistoryTextBox"
+                Text="{Binding History, Mode=TwoWay}"
                 Width="300"
                 AcceptsReturn="True"
                 IsReadOnly="True"
