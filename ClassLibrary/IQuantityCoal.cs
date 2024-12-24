@@ -2,6 +2,6 @@
 {
     public interface IQuantityCorner
     {
-        int CoalQuantity { get; }
+        int CornerQuantity { get; }
     }
 }

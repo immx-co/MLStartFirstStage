@@ -4,7 +4,7 @@ namespace ClassLibrary
 {
     public class Triangle : IFigure, IQuantityCorner
     { 
-        public int CoalQuantity { get; } = 3;
+        public int CornerQuantity { get; } = 3;
 
         public void UniqueTask()
         {
@@ -13,7 +13,7 @@ namespace ClassLibrary
 
         public string Ability()
         {
-            return $"Благодаря своим {CoalQuantity} углам, обеспечиваю стабильность конструкций.";
+            return $"Благодаря своим {CornerQuantity} углам, обеспечиваю стабильность конструкций.";
         }
     }
 }

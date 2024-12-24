@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ClassLibrary;
 using System.Windows.Input;
+using Serilog;
 
 namespace ThirdStage.ViewModels;
 
@@ -76,8 +78,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Конструктор класса MainWindowViewModel. Объявляет в себе несколько реактивных команд и параллельно запускает генерацию истории.
+    /// </summary>
     public MainWindowViewModel()
     {
+        Log.Logger = LoggerSetup.CreateLogger();
+
         AddCircleCommand = ReactiveCommand.Create(AddCircle);
         AddSquareCommand = ReactiveCommand.Create(AddSquare);
         AddTriangleCommand = ReactiveCommand.Create(AddTriangle);
@@ -86,6 +93,9 @@ public partial class MainWindowViewModel : ViewModelBase
         Task.Run(GenerateProgrammHistoryAsync);
     }
 
+    /// <summary>
+    /// Добавляет Круг по нажатию на кнопку.
+    /// </summary>
     private void AddCircle()
     {
         Circle circle = new Circle();
@@ -94,9 +104,12 @@ public partial class MainWindowViewModel : ViewModelBase
         LastAction = "Circle added.";
         UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(circle);
-        Debug.WriteLine("Circle added.");
+        Log.Logger.Information("Круг добавлен.");
     }
 
+    /// <summary>
+    /// Добавляет Квадрат по нажатию на кнопку.
+    /// </summary>
     private void AddSquare()
     {
         Square square = new Square();
@@ -105,9 +118,12 @@ public partial class MainWindowViewModel : ViewModelBase
         LastAction = "Square added.";
         UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(square);
-        Debug.WriteLine("Sqaure added.");
+        Log.Logger.Information("Квадрат добавлен.");
     }
 
+    /// <summary>
+    /// Добавляет Треугольник по нажатию на кнопку.
+    /// </summary>
     private void AddTriangle()
     {
         Triangle triangle = new Triangle();
@@ -116,9 +132,12 @@ public partial class MainWindowViewModel : ViewModelBase
         LastAction = "Triangle added.";
         UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(triangle);
-        Debug.WriteLine("Triangle added.");
+        Log.Logger.Information("Треугольник добавлен.");
     }
 
+    /// <summary>
+    /// Добавляет Прямоугольник по нажатию на кнопку.
+    /// </summary>
     private void AddRectangle()
     {
         ClassLibrary.Rectangle rectangle = new ClassLibrary.Rectangle();
@@ -127,16 +146,25 @@ public partial class MainWindowViewModel : ViewModelBase
         LastAction = "Rectangle added.";
         UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         AddFigureContent(rectangle);
-        Debug.WriteLine("Rectangle added.");
+        Log.Logger.Information("Прямоугольник добавлен.");
     }
 
+    /// <summary>
+    /// Выполняет действие фигуры, добавленной на главную панель.
+    /// </summary>
+    /// <param name="figure"></param>
     private void ExecuteFigureAction(IFigure figure)
     {
         LastAction = figure.Ability();
         UserHistory += Environment.NewLine + Environment.NewLine + LastAction;
         figure.UniqueTask();
+        Log.Logger.Information($"Выполнено действие фигуры: {LastAction}");
     }
 
+    /// <summary>
+    /// Добавляет весь генерируемый контент фигуры.
+    /// </summary>
+    /// <param name="figure"></param>
     private void AddFigureContent(IFigure figure)
     {
         Shape figureType = GetFigureType(figure);
@@ -146,10 +174,15 @@ public partial class MainWindowViewModel : ViewModelBase
             Figure = figureType,
             ActionCommand = ReactiveCommand.Create(() => ExecuteFigureAction(figure))
         });
+        Log.Logger.Information("Контент фигуры добавлен.");
 
         OnPropertyChanged(nameof(DynamicFigures));
     }
 
+    /// <summary>
+    /// Параллельно генерирует историю исходя из того, сколько фигур содержится в королевстве.
+    /// </summary>
+    /// <returns></returns>
     private async Task GenerateProgrammHistoryAsync()
     {
         while (true)
@@ -160,14 +193,21 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 continue;
             }
+            string figureAbility = randomFigure.Ability();
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                History += Environment.NewLine + Environment.NewLine + randomFigure.Ability();
+                History += Environment.NewLine + Environment.NewLine + figureAbility;
             });
+            Log.Logger.Debug($"Параллельно добавлено событие: {figureAbility}");
         }
         
     }
 
+    /// <summary>
+    /// Получает рандомно фигуру из королевства.
+    /// </summary>
+    /// <param name="figuresList"></param>
+    /// <returns></returns>
     private static IFigure? GetRandomFigure(List<IFigure> figuresList)
     {
         if (figuresList == null || figuresList.Count == 0)
@@ -180,6 +220,11 @@ public partial class MainWindowViewModel : ViewModelBase
         return figuresList[randomIndex];
     }
 
+    /// <summary>
+    /// Возвращает экземпляр класса фигуры из Avalonia в зависимости от того какая фигура передана в аргументы метода.
+    /// </summary>
+    /// <param name="figure"></param>
+    /// <returns></returns>
     private static Shape GetFigureType(IFigure figure)
     {
         if (figure.GetType() == typeof(Circle))

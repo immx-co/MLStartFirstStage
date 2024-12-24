@@ -4,7 +4,7 @@ namespace ClassLibrary
 {
     public class Square : IFigure, IQuantityCorner
     {
-        public int CoalQuantity { get; } = 4;
+        public int CornerQuantity { get; } = 4;
 
         public void UniqueTask()
         {

@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:rxui="http://reactiveui.net"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ThirdStage.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ThirdStage.InputWindow"
+        x:DataType="vm:InputWindowViewModel"
+        Title="InputWindow">
+  <StackPanel HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+    <TextBlock Text="Welcome to Kingdom!" HorizontalAlignment="Center" FontSize="30" />
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 40">
+      <Button Content="Вход" Margin="25, 0"></Button>
+      <Button Content="Регистрация" Margin="25, 0"></Button>
+    </StackPanel>
+  </StackPanel>
+</Window>
