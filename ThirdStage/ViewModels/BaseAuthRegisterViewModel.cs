@@ -19,29 +19,30 @@ namespace ThirdStage.ViewModels
 
         public DbContextOptionsBuilder<ApplicationContext> optionsBuilder;
 
+        public IConfiguration configuration;
+
         public readonly PasswordHasher _hasher;
 
         private string _nickname;
         private string _password;
+        private string _email;
 
         public string Nickname
         {
             get => _nickname;
-            set
-            {
-                _nickname = value;
-                this.RaiseAndSetIfChanged(ref _nickname, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _nickname, value);
         }
 
         public string Password
         {
             get => _password;
-            set
-            {
-                _password = value;
-                this.RaiseAndSetIfChanged(ref _password, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _password, value);
+        }
+
+        public string Email
+        {
+            get => _email;
+            set => this.RaiseAndSetIfChanged(ref _email, value);
         }
 
         public string nicknamePattern = @"^[а-яА-Яa-zA-Z0-9]+$";
@@ -54,6 +55,8 @@ namespace ThirdStage.ViewModels
         /// <param name="closeThisWindow">Делегат закрытия окна.</param>
         public BaseAuthRegisterViewModel(IScreen screen, IConfiguration configuration)
         {
+            this.configuration = configuration;
+
             HostScreen = screen;
             Log.Logger = LoggerSetup.CreateLogger();
 

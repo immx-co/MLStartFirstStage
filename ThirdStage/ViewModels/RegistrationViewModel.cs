@@ -28,6 +28,7 @@ namespace ThirdStage.ViewModels
                 string wrongNickname = Nickname;
                 Nickname = string.Empty;
                 Password = string.Empty;
+                Email = string.Empty;
                 ShowMessageBox($"Invalid username: {wrongNickname}", "Имя пользователя не может состоять меньше чем из 3 символов! Попробуйте еще раз.");
                 Log.Logger.Warning($"Имя пользователя не может состоять меньше чем из 3 символов: {wrongNickname}.");
                 return;
@@ -58,13 +59,14 @@ namespace ThirdStage.ViewModels
             }
             string hashedPassword = _hasher.HashPassword(Password);
             Log.Logger.Verbose("Пароль захеширован успешно.");
-            User authUser = new User { Name = Nickname, HashPassword = hashedPassword };
+            User authUser = new User { Name = Nickname, HashPassword = hashedPassword, Email = Email };
             db.Users.AddRange(authUser);
             db.SaveChanges();
             ShowMessageBoxSuccessRegistration(Nickname);
             Log.Logger.Debug($"Пользователь {Nickname} зарегистрирован успешно.");
             Nickname = string.Empty;
             Password = string.Empty;
+            HostScreen.Router.Navigate.Execute(new AutorizationWindowViewModel(HostScreen, configuration));
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
         bool unHashedPassword = _hasher.VerifyPassword(Password, dbUser.HashPassword);
         if (!unHashedPassword)
         {
-            Password = string.Empty;
+            this.Password = string.Empty;
             ShowMessageBox("Invalid password", "Неверный пароль! Попробуйте еще раз.");
             Log.Logger.Warning($"Неверный пароль у {Nickname}");
             return;
