@@ -8,6 +8,7 @@ using System.Linq;
 using ClassLibrary;
 using ThirdStage.Views;
 using Serilog;
+using ThirdStage.ViewModels;
 
 namespace ThirdStage;
 
@@ -25,17 +26,13 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            Log.Logger = LoggerSetup.CreateLogger();
-            string fileName = "MLstartConfig.json";
-            IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory
-                .GetCurrentDirectory())
-                .AddJsonFile(fileName).Build();
 
-            Log.Logger.Information("Конфигурация загружена успешно.");
+            desktop.MainWindow = new InputWindow
+            {
+                DataContext = new InputWindowViewModel(),
+            };
 
-
-            desktop.MainWindow = new AutorizationWindow(configuration);
+            //desktop.MainWindow = new AutorizationWindow(configuration);
 
             //desktop.MainWindow = new MainWindow
             //{

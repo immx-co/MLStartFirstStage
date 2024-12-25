@@ -5,7 +5,7 @@ using RoutingExample.ViewModels;
 
 namespace RoutingExample;
 
-public partial class LoginWindow : ReactiveUserControl<FirstViewModel>
+public partial class LoginWindow : ReactiveUserControl<LoginViewModel>
 {
     public LoginWindow()
     {

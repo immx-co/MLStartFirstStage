@@ -1,14 +1,15 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using ThirdStage.ViewModels;
 
-namespace ThirdStage.Views;
+namespace ThirdStage;
 
-public partial class MainWindow : ReactiveUserControl<MainWindowViewModel>
+public partial class RegistrationWindow : ReactiveUserControl<RegistrationViewModel>
 {
-    public MainWindow()
+    public RegistrationWindow()
     {
         this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);

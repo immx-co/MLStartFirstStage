@@ -19,22 +19,11 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
     </Grid.RowDefinitions>
-    <rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
-      <rxui:RoutedViewHost.DefaultContent>
-        <TextBlock Text="Welcome to Kingdom!"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
-      </rxui:RoutedViewHost.DefaultContent>
-      <rxui:RoutedViewHost.ViewLocator>
-        <!-- See AppViewLocator.cs section below -->
-        <app:AppViewLocator />
-      </rxui:RoutedViewHost.ViewLocator>
-    </rxui:RoutedViewHost>
-    
-    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
+
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15">
       <StackPanel.Styles>
         <Style Selector="StackPanel > :is(Control)">
           <Setter Property="Margin" Value="2"/>
@@ -49,6 +38,19 @@
       <Button Content="Регистрация" Command="{Binding Registration}" />
       <TextBlock Text="{Binding Router.NavigationStack.Count}" />
     </StackPanel>
+    
+    <rxui:RoutedViewHost Grid.Row="1" Router="{Binding Router}">
+      <rxui:RoutedViewHost.DefaultContent>
+        <TextBlock Text="Welcome to Kingdom!"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+      </rxui:RoutedViewHost.DefaultContent>
+      <rxui:RoutedViewHost.ViewLocator>
+        <!-- See AppViewLocator.cs section below -->
+        <app:AppViewLocator />
+      </rxui:RoutedViewHost.ViewLocator>
+    </rxui:RoutedViewHost>
+    
   </Grid>
 
 </Window>

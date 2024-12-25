@@ -1,19 +1,48 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:rxui="http://reactiveui.net"
+        xmlns:app="clr-namespace:ThirdStage"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ThirdStage.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ThirdStage.InputWindow"
+        Title="InputWindow"
+        MinHeight="500"
+        MinWidth="1500"
         x:DataType="vm:InputWindowViewModel"
-        Title="InputWindow">
-  <StackPanel HorizontalAlignment="Center"
-              VerticalAlignment="Center">
-    <TextBlock Text="Welcome to Kingdom!" HorizontalAlignment="Center" FontSize="30" />
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 40">
-      <Button Content="Вход" Margin="25, 0"></Button>
-      <Button Content="Регистрация" Margin="25, 0"></Button>
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/avalonia-logo.ico">
+  
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+      <StackPanel.Styles>
+        <Style Selector="StackPanel > :is(Control)">
+          <Setter Property="Margin" Value="2"/>
+        </Style>
+        <Style Selector="StackPanel > TextBlock">
+          <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+      </StackPanel.Styles>
+      <Button Content="Main Page" Command="{Binding BackToInputWindow}"></Button>
+      <Button Content="Login" Command="{Binding Input}"></Button>
+      <Button Content="Registration" Command="{Binding Registration}"></Button>
     </StackPanel>
-  </StackPanel>
+
+    <rxui:RoutedViewHost Grid.Row="1" Router="{Binding Router}">
+      <rxui:RoutedViewHost.DefaultContent>
+      </rxui:RoutedViewHost.DefaultContent>
+      <rxui:RoutedViewHost.ViewLocator>
+        <!-- See AppViewLocator.cs section below -->
+        <app:AppViewLocator />
+      </rxui:RoutedViewHost.ViewLocator>
+    </rxui:RoutedViewHost>
+  </Grid>
 </Window>

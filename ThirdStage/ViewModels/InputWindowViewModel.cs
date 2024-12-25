@@ -1,13 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MsBox.Avalonia.Base;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
+using Serilog;
 using System.IO;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using ThirdStage.Views;
 
 namespace ThirdStage.ViewModels
 {
@@ -15,13 +11,29 @@ namespace ThirdStage.ViewModels
     {
         public RoutingState Router { get; } = new RoutingState();
 
+        public ReactiveCommand<Unit, IRoutableViewModel> BackToInputWindow { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoApplication { get; }
+
         public ReactiveCommand<Unit, IRoutableViewModel> Input { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> Registration { get; }
 
         public InputWindowViewModel()
         {
-            ;
+            string fileName = "MLstartConfig.json";
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory
+                .GetCurrentDirectory())
+                .AddJsonFile(fileName).Build();
+
+            Log.Logger.Information("Конфигурация загружена успешно.");
+
+            Router.Navigate.Execute(new InputMainPageViewModel(this));
+            BackToInputWindow = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new InputMainPageViewModel(this)));
+            Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new AutorizationWindowViewModel(this, configuration)));
+            Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new RegistrationViewModel(this, configuration)));
+            GoApplication = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new MainWindowViewModel(this)));
         }
     }
 }

@@ -1,13 +1,15 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
+using ThirdStage.ViewModels;
 
 namespace ThirdStage;
 
-public partial class InputWindow : Window
+public partial class InputWindow : ReactiveWindow<InputWindowViewModel>
 {
     public InputWindow()
     {
-        InitializeComponent();
+        this.WhenActivated(disposables => { });
+        AvaloniaXamlLoader.Load(this);
     }
 }

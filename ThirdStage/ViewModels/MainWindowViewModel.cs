@@ -14,8 +14,12 @@ using Serilog;
 
 namespace ThirdStage.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
 {
+    public IScreen HostScreen { get; }
+
+    public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+
     private readonly Kingdom _kingdom = new();
 
     public ICommand AddCircleCommand { get; init; }
@@ -29,8 +33,7 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _dynamicFigures;
         set
         {
-            _dynamicFigures = value;
-            OnPropertyChanged(nameof(DynamicFigures));
+            this.RaiseAndSetIfChanged(ref _dynamicFigures, value);
         }
     }
 
@@ -40,8 +43,7 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _countsFigures;
         set
         {
-            _countsFigures = value;
-            OnPropertyChanged(nameof(CountFigures));
+            this.RaiseAndSetIfChanged(ref _countsFigures, value);
         }
     }
 
@@ -51,8 +53,7 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _lastAction;
         set
         {
-            _lastAction = value;
-            OnPropertyChanged(nameof(LastAction));
+            this.RaiseAndSetIfChanged(ref _lastAction, value);
         }
     }
 
@@ -62,8 +63,7 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _userHistory;
         set
         {
-            _userHistory = value;
-            OnPropertyChanged(nameof(UserHistory));
+            this.RaiseAndSetIfChanged(ref _userHistory, value);
         }
     }
 
@@ -73,16 +73,16 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _history;
         set
         {
-            _history = value;
-            OnPropertyChanged(nameof(History));
+            this.RaiseAndSetIfChanged(ref _history, value);
         }
     }
 
     /// <summary>
     /// Конструктор класса MainWindowViewModel. Объявляет в себе несколько реактивных команд и параллельно запускает генерацию истории.
     /// </summary>
-    public MainWindowViewModel()
+    public MainWindowViewModel(IScreen screen)
     {
+        HostScreen = screen;
         Log.Logger = LoggerSetup.CreateLogger();
 
         AddCircleCommand = ReactiveCommand.Create(AddCircle);
@@ -176,7 +176,7 @@ public partial class MainWindowViewModel : ViewModelBase
         });
         Log.Logger.Information("Контент фигуры добавлен.");
 
-        OnPropertyChanged(nameof(DynamicFigures));
+        //this.RaiseAndSetIfChanged(ref _dynamicFigures, value);
     }
 
     /// <summary>
