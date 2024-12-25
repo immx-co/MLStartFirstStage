@@ -10,6 +10,8 @@ namespace RoutingExample
         public IViewFor ResolveView<T>(T viewModel, string contract = null) => viewModel switch
         {
             FirstViewModel context => new FirstView { DataContext = context },
+            LoginViewModel context => new LoginWindow { DataContext = context },
+            RegistrationViewModel context => new RegistrationWindow { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
     }
