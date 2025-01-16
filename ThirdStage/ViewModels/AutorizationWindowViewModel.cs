@@ -11,7 +11,7 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
 {
     public ReactiveCommand<Unit, Unit> LoginCommand { get; }
 
-    public AutorizationWindowViewModel(IScreen screen, IConfiguration configuration) : base(screen, configuration)
+    public AutorizationWindowViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher) : base(screen, configuration, hasher)
     {
         LoginCommand = ReactiveCommand.Create(Login);
     }

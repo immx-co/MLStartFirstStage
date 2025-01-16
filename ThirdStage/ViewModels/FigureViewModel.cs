@@ -3,6 +3,6 @@ using System.Windows.Input;
 
 public class FigureViewModel
 {
-    public Control Figure { get; set; }
-    public ICommand ActionCommand { get; set; }
+    public Control Figure { get; set; } = null!;
+    public ICommand ActionCommand { get; set; } = null!;
 }

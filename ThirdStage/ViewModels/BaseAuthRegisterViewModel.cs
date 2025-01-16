@@ -5,8 +5,6 @@ using MsBox.Avalonia;
 using ReactiveUI;
 using Serilog;
 using System;
-using System.Linq;
-using System.Reactive;
 using ThirdStage.Database;
 
 namespace ThirdStage.ViewModels
@@ -19,9 +17,9 @@ namespace ThirdStage.ViewModels
 
         public DbContextOptionsBuilder<ApplicationContext> optionsBuilder;
 
-        public IConfiguration configuration;
+        public IConfiguration _configuration = null!;
 
-        public readonly PasswordHasher _hasher;
+        public readonly PasswordHasher _hasher = null!;
 
         private string _nickname;
         private string _password;
@@ -53,9 +51,9 @@ namespace ThirdStage.ViewModels
         /// <param name="configuration">Конфигурация приложения.</param>
         /// <param name="openMainWindow">Делегат открытия главного окна.</param>
         /// <param name="closeThisWindow">Делегат закрытия окна.</param>
-        public BaseAuthRegisterViewModel(IScreen screen, IConfiguration configuration)
+        public BaseAuthRegisterViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
 
             HostScreen = screen;
             Log.Logger = LoggerSetup.CreateLogger();
@@ -63,7 +61,7 @@ namespace ThirdStage.ViewModels
             optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
             optionsBuilder.UseNpgsql(configuration["stringConnection"]);
 
-            _hasher = new PasswordHasher();
+            _hasher = hasher;
         }
 
         /// <summary>

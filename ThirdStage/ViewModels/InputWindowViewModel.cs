@@ -4,6 +4,7 @@ using ReactiveUI;
 using Serilog;
 using System.IO;
 using System.Reactive;
+using ThirdStage.Database;
 
 namespace ThirdStage.ViewModels
 {
@@ -19,7 +20,7 @@ namespace ThirdStage.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> Registration { get; }
 
-        public InputWindowViewModel()
+        public InputWindowViewModel(PasswordHasher hasher)
         {
             string fileName = "MLstartConfig.json";
             IConfiguration configuration = new ConfigurationBuilder()
@@ -31,8 +32,8 @@ namespace ThirdStage.ViewModels
 
             Router.Navigate.Execute(new InputMainPageViewModel(this));
             BackToInputWindow = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new InputMainPageViewModel(this)));
-            Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new AutorizationWindowViewModel(this, configuration)));
-            Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new RegistrationViewModel(this, configuration)));
+            Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new AutorizationWindowViewModel(this, configuration, hasher)));
+            Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new RegistrationViewModel(this, configuration, hasher)));
             GoApplication = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new MainWindowViewModel(this)));
         }
     }

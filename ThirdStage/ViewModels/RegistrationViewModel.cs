@@ -13,7 +13,7 @@ namespace ThirdStage.ViewModels
     {
         public ReactiveCommand<Unit, Unit> RegistrationCommand { get; }
 
-        public RegistrationViewModel(IScreen screen, IConfiguration configuration) : base(screen, configuration)
+        public RegistrationViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher) : base(screen, configuration, hasher)
         {
             RegistrationCommand = ReactiveCommand.Create(Registration);
         }
@@ -66,7 +66,7 @@ namespace ThirdStage.ViewModels
             Log.Logger.Debug($"Пользователь {Nickname} зарегистрирован успешно.");
             Nickname = string.Empty;
             Password = string.Empty;
-            HostScreen.Router.Navigate.Execute(new AutorizationWindowViewModel(HostScreen, configuration));
+            HostScreen.Router.Navigate.Execute(new AutorizationWindowViewModel(HostScreen, _configuration, _hasher));
         }
 
         /// <summary>
