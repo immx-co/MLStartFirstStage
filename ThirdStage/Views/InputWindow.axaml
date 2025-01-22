@@ -10,10 +10,10 @@
         Title="InputWindow"
         MinHeight="500"
         MinWidth="1500"
-        x:DataType="vm:InputWindowViewModel"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
+        x:DataType="vm:InputWindowViewModel"
         Icon="/Assets/avalonia-logo.ico">
   
   <Grid>

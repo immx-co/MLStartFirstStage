@@ -1,20 +1,19 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MsBox.Avalonia.Base;
 using ReactiveUI;
-using Serilog;
 using System;
-using System.IO;
 using System.Reactive;
 using ThirdStage.Database;
 
 namespace ThirdStage.ViewModels
 {
-    public class InputWindowViewModel : ReactiveObject, IScreen
+    public class InputWindowViewModel : ReactiveObject
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public RoutingState Router { get; } = new RoutingState();
+        //public RoutingState Router { get; } = new RoutingState();
+
+        RoutingState Router { get;  }
 
         public ReactiveCommand<Unit, IRoutableViewModel> BackToInputWindow { get; }
 
@@ -24,8 +23,9 @@ namespace ThirdStage.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> Registration { get; }
 
-        public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider)
+        public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider, IScreenRealization screenRealization)
         {
+            Router = screenRealization.Router;
             _serviceProvider = serviceProvider;
 
             //Router.Navigate.Execute(new InputMainPageViewModel(this));

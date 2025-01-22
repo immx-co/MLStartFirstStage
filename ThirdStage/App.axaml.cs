@@ -42,7 +42,7 @@ public partial class App : Application
 
             desktop.MainWindow = new InputWindow
             {
-                DataContext = servicesProvider.GetService<InputWindowViewModel>(),
+                DataContext = servicesProvider.GetService<IScreenRealization>()
             };
         }
 
@@ -55,8 +55,9 @@ public partial class App : Application
 
         servicesProvider.AddSingleton(configuration);
 
-        servicesProvider.AddSingleton<IScreen, InputWindowViewModel>();
+        servicesProvider.AddSingleton<IScreen, IScreenRealization>();
 
+        servicesProvider.AddSingleton<InputWindowViewModel>();
         servicesProvider.AddSingleton<AutorizationWindowViewModel>();
         servicesProvider.AddSingleton<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
