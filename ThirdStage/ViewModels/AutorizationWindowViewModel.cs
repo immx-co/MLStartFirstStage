@@ -40,5 +40,6 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
             return;
         }
         HostScreen.Router.Navigate.Execute(new MainWindowViewModel(HostScreen));
+        //HostScreen.Router.Navigate.Execute(servicesProvider);
     }
 }

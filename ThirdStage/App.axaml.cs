@@ -7,6 +7,11 @@ using ThirdStage.ViewModels;
 
 using Microsoft.Extensions.DependencyInjection;
 using ThirdStage.Database;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 
 namespace ThirdStage;
 
@@ -25,38 +30,42 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
 
-            ServiceProvider servicesProvider = ServicesRegister();
+            string fileName = "MLstartConfig.json";
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory
+                .GetCurrentDirectory())
+                .AddJsonFile(fileName).Build();
+
+            Log.Logger.Information("Конфигурация загружена успешно.");
+
+            ServiceProvider servicesProvider = ServicesRegister(configuration);
 
             desktop.MainWindow = new InputWindow
             {
                 DataContext = servicesProvider.GetService<InputWindowViewModel>(),
             };
-
-            //desktop.MainWindow = new AutorizationWindow(configuration);
-
-            //desktop.MainWindow = new MainWindow
-            //{
-            //    DataContext = new MainWindowViewModel(),
-            //};
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private ServiceProvider ServicesRegister()
+    private ServiceProvider ServicesRegister(IConfiguration configuration)
     {
         IServiceCollection servicesProvider = new ServiceCollection();
+
+        servicesProvider.AddSingleton(configuration);
+
+        servicesProvider.AddSingleton<IScreen, InputWindowViewModel>();
 
         servicesProvider.AddSingleton<AutorizationWindowViewModel>();
         servicesProvider.AddSingleton<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
-        servicesProvider.AddSingleton<InputWindowViewModel>();
         servicesProvider.AddSingleton<MainWindowViewModel>();
         servicesProvider.AddSingleton<RegistrationViewModel>();
 
         servicesProvider.AddSingleton<PasswordHasher>();
 
-        servicesProvider.AddScoped<ApplicationContext>();
+        servicesProvider.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("stringConnection")));
 
         return servicesProvider.BuildServiceProvider();
     }
