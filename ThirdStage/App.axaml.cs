@@ -42,7 +42,7 @@ public partial class App : Application
 
             desktop.MainWindow = new InputWindow
             {
-                DataContext = servicesProvider.GetService<IScreenRealization>()
+                DataContext = servicesProvider.GetService<InputWindowViewModel>()
             };
         }
 
@@ -58,15 +58,15 @@ public partial class App : Application
         servicesProvider.AddSingleton<IScreen, IScreenRealization>();
 
         servicesProvider.AddSingleton<InputWindowViewModel>();
-        servicesProvider.AddSingleton<AutorizationWindowViewModel>();
-        servicesProvider.AddSingleton<FigureViewModel>();
+        servicesProvider.AddTransient<AutorizationWindowViewModel>();
+        servicesProvider.AddTransient<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
-        servicesProvider.AddSingleton<MainWindowViewModel>();
-        servicesProvider.AddSingleton<RegistrationViewModel>();
+        servicesProvider.AddTransient<MainWindowViewModel>();
+        servicesProvider.AddTransient<RegistrationViewModel>();
 
         servicesProvider.AddSingleton<PasswordHasher>();
 
-        servicesProvider.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("stringConnection")));
+        servicesProvider.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("stringConnection")), ServiceLifetime.Transient);
 
         return servicesProvider.BuildServiceProvider();
     }

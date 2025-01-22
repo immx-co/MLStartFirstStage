@@ -11,6 +11,8 @@ namespace ThirdStage.ViewModels
 {
     public class BaseAuthRegisterViewModel : ReactiveObject, IRoutableViewModel
     {
+        public IServiceProvider _servicesProvider;
+
         public IScreen HostScreen { get; }
 
         public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
@@ -20,7 +22,7 @@ namespace ThirdStage.ViewModels
         public IConfiguration _configuration = null!;
 
         public readonly PasswordHasher _hasher = null!;
-
+        
         private string _nickname;
         private string _password;
         private string _email;
@@ -51,15 +53,13 @@ namespace ThirdStage.ViewModels
         /// <param name="configuration">Конфигурация приложения.</param>
         /// <param name="openMainWindow">Делегат открытия главного окна.</param>
         /// <param name="closeThisWindow">Делегат закрытия окна.</param>
-        public BaseAuthRegisterViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher)
+        public BaseAuthRegisterViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher, IServiceProvider servicesProvider)
         {
+            _servicesProvider = servicesProvider;
             _configuration = configuration;
 
             HostScreen = screen;
             Log.Logger = LoggerSetup.CreateLogger();
-
-            optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-            optionsBuilder.UseNpgsql(configuration["stringConnection"]);
 
             _hasher = hasher;
         }

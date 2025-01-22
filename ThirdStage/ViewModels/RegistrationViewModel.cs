@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Text.RegularExpressions;
 using ThirdStage.Database;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ThirdStage.ViewModels
 {
@@ -13,7 +15,7 @@ namespace ThirdStage.ViewModels
     {
         public ReactiveCommand<Unit, Unit> RegistrationCommand { get; }
 
-        public RegistrationViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher) : base(screen, configuration, hasher)
+        public RegistrationViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher, IServiceProvider servicesProvider) : base(screen, configuration, hasher, servicesProvider)
         {
             RegistrationCommand = ReactiveCommand.Create(Registration);
         }
@@ -48,7 +50,7 @@ namespace ThirdStage.ViewModels
                 Log.Logger.Warning("Пароль должен быть не менее 3х символов.");
                 return;
             }
-            using ApplicationContext db = new ApplicationContext(optionsBuilder.Options);
+            using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
             List<User> dbUsers = db.Users.ToList();
             if (dbUsers.Any(user => user.Name == Nickname))
             {
@@ -66,7 +68,7 @@ namespace ThirdStage.ViewModels
             Log.Logger.Debug($"Пользователь {Nickname} зарегистрирован успешно.");
             Nickname = string.Empty;
             Password = string.Empty;
-            HostScreen.Router.Navigate.Execute(new AutorizationWindowViewModel(HostScreen, _configuration, _hasher));
+            HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<AutorizationWindowViewModel>());
         }
 
         /// <summary>

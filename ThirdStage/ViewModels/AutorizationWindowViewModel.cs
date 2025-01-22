@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using Serilog;
+using System;
 using System.Linq;
 using System.Reactive;
 using ThirdStage.Database;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ThirdStage.ViewModels;
 
@@ -11,7 +13,7 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
 {
     public ReactiveCommand<Unit, Unit> LoginCommand { get; }
 
-    public AutorizationWindowViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher) : base(screen, configuration, hasher)
+    public AutorizationWindowViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher, IServiceProvider servicesProvider) : base(screen, configuration, hasher, servicesProvider)
     {
         LoginCommand = ReactiveCommand.Create(Login);
     }
@@ -21,7 +23,8 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
     /// </summary>
     private void Login()
     {
-        using ApplicationContext db = new ApplicationContext(optionsBuilder.Options);
+        using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+
         User? dbUser = db.Users.SingleOrDefault(user => user.Name == Nickname);
         if (dbUser is null)
         {
@@ -39,7 +42,6 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
             Log.Logger.Warning($"Неверный пароль у {Nickname}");
             return;
         }
-        HostScreen.Router.Navigate.Execute(new MainWindowViewModel(HostScreen));
-        //HostScreen.Router.Navigate.Execute(servicesProvider);
+        HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<MainWindowViewModel>());
     }
 }

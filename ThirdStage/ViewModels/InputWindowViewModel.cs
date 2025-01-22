@@ -11,9 +11,7 @@ namespace ThirdStage.ViewModels
     {
         private readonly IServiceProvider _serviceProvider;
 
-        //public RoutingState Router { get; } = new RoutingState();
-
-        RoutingState Router { get;  }
+        public RoutingState Router { get;  }
 
         public ReactiveCommand<Unit, IRoutableViewModel> BackToInputWindow { get; }
 
@@ -23,7 +21,7 @@ namespace ThirdStage.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> Registration { get; }
 
-        public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider, IScreenRealization screenRealization)
+        public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider, IScreen screenRealization)
         {
             Router = screenRealization.Router;
             _serviceProvider = serviceProvider;
