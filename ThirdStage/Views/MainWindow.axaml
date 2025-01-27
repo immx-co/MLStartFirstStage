@@ -10,22 +10,33 @@
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
         <ColumnDefinition Width="*"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
         <ColumnDefinition Width="Auto"></ColumnDefinition>
       </Grid.ColumnDefinitions>
 
-      <TextBox Grid.Column="0"
-                Name="UserHistoryTextBox"
-                Text="{Binding UserHistory, Mode=TwoWay}"
-                Width="300"
-                AcceptsReturn="True"
-                IsReadOnly="True"
-                HorizontalAlignment="Stretch"
-                Margin="10"
-                FontSize="14">
+      <Button Grid.Column="0"
+              Content="&lt;"
+              Width="30"
+              Margin="0,0,10,0"
+              VerticalAlignment="Center"
+              Command="{Binding FlipLeftCommand}"
+              IsEnabled="{Binding IsLeftButtonEnabled}"/>
+
+      <TextBox Grid.Column="1"
+               Name="UserHistoryTextBox"
+               Text="{Binding UserHistory, Mode=TwoWay}"
+               Width="300"
+               AcceptsReturn="True"
+               IsReadOnly="True"
+               HorizontalAlignment="Stretch"
+               Margin="10"
+               FontSize="14">
       </TextBox>
-    
-      <Panel Grid.Column="1">
+
+
+      <Panel Grid.Column="2">
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
           <ExperimentalAcrylicBorder.Material>
             <ExperimentalAcrylicMaterial
@@ -105,15 +116,24 @@
         </Grid>
       </Panel>
 
-      <TextBox Grid.Column="2"
-                Name="HistoryTextBox"
-                Text="{Binding History, Mode=TwoWay}"
-                Width="300"
-                AcceptsReturn="True"
-                IsReadOnly="True"
-                HorizontalAlignment="Right"
-                Margin="10"
-                FontSize="14">
+      <TextBox Grid.Column="3"
+               Name="HistoryTextBox"
+               Text="{Binding History, Mode=TwoWay}"
+               Width="300"
+               AcceptsReturn="True"
+               IsReadOnly="True"
+               HorizontalAlignment="Right"
+               Margin="10"
+               FontSize="14">
       </TextBox>
+
+      <Button Grid.Column="4"
+              Content="&gt;"
+              Width="30"
+              Margin="0,0,10,0"
+              VerticalAlignment="Center"
+              Command="{Binding FlipRightCommand}"
+              IsEnabled="{Binding IsRightButtonEnabled}"/>
+
   </Grid>
 </UserControl>

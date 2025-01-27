@@ -27,6 +27,23 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     public ICommand AddTriangleCommand { get; init; }
     public ICommand AddRectangleCommand { get; init; }
 
+    public ICommand FlipRightCommand { get; init; }
+    public ICommand FlipLeftCommand { get; init; }
+
+    private bool _isRightButtonEnabled = true;
+    public bool IsRightButtonEnabled
+    {
+        get => _isRightButtonEnabled;
+        set => this.RaiseAndSetIfChanged(ref _isRightButtonEnabled, value);
+    }
+
+    private bool _isLeftButtonEnabled = false;
+    public bool IsLeftButtonEnabled
+    {
+        get => _isLeftButtonEnabled;
+        set => this.RaiseAndSetIfChanged(ref _isLeftButtonEnabled, value);
+    }
+
     private ObservableCollection<FigureViewModel> _dynamicFigures = new();
     public ObservableCollection<FigureViewModel> DynamicFigures
     {
@@ -90,7 +107,32 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
         AddTriangleCommand = ReactiveCommand.Create(AddTriangle);
         AddRectangleCommand = ReactiveCommand.Create(AddRectangle);
 
+        FlipRightCommand = ReactiveCommand.Create(FlipRight);
+        FlipLeftCommand = ReactiveCommand.Create(FlipLeft);
+
         Task.Run(GenerateProgrammHistoryAsync);
+    }
+    
+    /// <summary>
+    /// Листает окно направо.
+    /// </summary>
+    private void FlipRight()
+    {
+        Debug.WriteLine("Нажата кнопка направо");
+        Log.Logger.Information("Нажата кнопка '>'");
+        IsLeftButtonEnabled = true;
+        IsRightButtonEnabled = false;
+    }
+
+    /// <summary>
+    /// Листает окно налево.
+    /// </summary>
+    private void FlipLeft()
+    {
+        Debug.WriteLine("Нажата кнопка налево");
+        Log.Logger.Information("Нажата кнопка '<'");
+        IsRightButtonEnabled = true;
+        IsLeftButtonEnabled = false;
     }
 
     /// <summary>
