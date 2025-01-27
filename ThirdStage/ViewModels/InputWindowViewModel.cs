@@ -26,12 +26,6 @@ namespace ThirdStage.ViewModels
             Router = screenRealization.Router;
             _serviceProvider = serviceProvider;
 
-            //Router.Navigate.Execute(new InputMainPageViewModel(this));
-            //BackToInputWindow = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new InputMainPageViewModel(this)));
-            //Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new AutorizationWindowViewModel(this, configuration, hasher)));
-            //Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new RegistrationViewModel(this, configuration, hasher)));
-            //GoApplication = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new MainWindowViewModel(this)));
-
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
             BackToInputWindow = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>()));
             Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<AutorizationWindowViewModel>()));

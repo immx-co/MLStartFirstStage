@@ -11,38 +11,43 @@
         MinHeight="500"
         MinWidth="1500"
         TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         x:DataType="vm:InputWindowViewModel"
         Icon="/Assets/avalonia-logo.ico">
-  
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
 
-    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
-      <StackPanel.Styles>
-        <Style Selector="StackPanel > :is(Control)">
-          <Setter Property="Margin" Value="2"/>
-        </Style>
-        <Style Selector="StackPanel > TextBlock">
-          <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-      </StackPanel.Styles>
-      <Button Content="Main Page" Command="{Binding BackToInputWindow}"></Button>
-      <Button Content="Login" Command="{Binding Input}"></Button>
-      <Button Content="Registration" Command="{Binding Registration}"></Button>
-    </StackPanel>
+  <Border BorderBrush="Black"
+          BorderThickness="3"
+          CornerRadius="0"
+          Background="White"
+          PointerPressed="WindowPointerMoved">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
 
-    <rxui:RoutedViewHost Grid.Row="1" Router="{Binding Router}">
-      <rxui:RoutedViewHost.DefaultContent>
-      </rxui:RoutedViewHost.DefaultContent>
-      <rxui:RoutedViewHost.ViewLocator>
-        <!-- See AppViewLocator.cs section below -->
-        <app:AppViewLocator />
-      </rxui:RoutedViewHost.ViewLocator>
-    </rxui:RoutedViewHost>
-  </Grid>
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+        <StackPanel.Styles>
+          <Style Selector="StackPanel > :is(Control)">
+            <Setter Property="Margin" Value="2"/>
+          </Style>
+          <Style Selector="StackPanel > TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+          </Style>
+        </StackPanel.Styles>
+        <Button Content="Main Page" Command="{Binding BackToInputWindow}"></Button>
+        <Button Content="Login" Command="{Binding Input}"></Button>
+        <Button Content="Registration" Command="{Binding Registration}"></Button>
+      </StackPanel>
+
+      <rxui:RoutedViewHost Grid.Row="1" Router="{Binding Router}">
+        <rxui:RoutedViewHost.DefaultContent>
+        </rxui:RoutedViewHost.DefaultContent>
+        <rxui:RoutedViewHost.ViewLocator>
+          <!-- See AppViewLocator.cs section below -->
+          <app:AppViewLocator />
+        </rxui:RoutedViewHost.ViewLocator>
+      </rxui:RoutedViewHost>
+    </Grid>
+  </Border>
 </Window>
