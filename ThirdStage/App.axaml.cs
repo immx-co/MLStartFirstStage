@@ -61,7 +61,7 @@ public partial class App : Application
         servicesProvider.AddTransient<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
         servicesProvider.AddTransient<MainWindowViewModel>();
-        servicesProvider.AddTransient<JokesWindowViewModel>();
+        servicesProvider.AddSingleton<JokesWindowViewModel>();
         servicesProvider.AddTransient<RegistrationViewModel>();
         servicesProvider.AddTransient<AutorizationWindowViewModel>();
 

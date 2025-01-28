@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:vm="using:ThirdStage.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ThirdStage.JokesWindow"
+             x:DataType="vm:JokesWindowViewModel">
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"></ColumnDefinition>
+      <ColumnDefinition Width="*"></ColumnDefinition>
+      <ColumnDefinition Width="Auto"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+
+    <Button Grid.Column="0"
+              Content="&lt;"
+              Width="30"
+              Margin="0,0,10,0"
+              VerticalAlignment="Center"
+              Command="{Binding FlipLeftCommand}"/>
+
+    <TextBlock Grid.Column="1"
+               Text="{Binding DisplayedJoke}"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               FontSize="16"
+               TextWrapping="Wrap"
+               Margin="20"/>
+    
+    <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,10,0">
+      <Button Command="{Binding RandomJokeCommand}" Margin="0, 30" HorizontalAlignment="Right">
+        <TextBlock>Random Joke</TextBlock>
+      </Button>
+
+      <Button Command="{Binding RandomTenCommand}" HorizontalAlignment="Right">
+        <TextBlock>Random Ten</TextBlock>
+      </Button>
+
+      <Button Command="{Binding RandomJokesCommand}" Margin="0, 30" HorizontalAlignment="Right">
+        <TextBlock>Random Jokes</TextBlock>
+      </Button>
+
+      <Button Command="{Binding TenJokesCommand}" HorizontalAlignment="Right">
+        <TextBlock>Ten Jokes</TextBlock>
+      </Button>
+    </StackPanel>
+  </Grid>
+
+</UserControl>
