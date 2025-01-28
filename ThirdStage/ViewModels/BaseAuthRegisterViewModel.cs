@@ -48,7 +48,7 @@ namespace ThirdStage.ViewModels
         public string nicknamePattern = @"^[а-яА-Яa-zA-Z0-9]+$";
 
         /// <summary>
-        /// Конструктор класса AutorizationWindowViewModel.
+        /// Конструктор класса BaseAuthRegisterViewModel.
         /// </summary>
         /// <param name="configuration">Конфигурация приложения.</param>
         /// <param name="openMainWindow">Делегат открытия главного окна.</param>

@@ -8,14 +8,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ClassLibrary;
 using System.Windows.Input;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ThirdStage.ViewModels;
 
 public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
 {
+    public IServiceProvider _servicesProvider;
+
     public IScreen HostScreen { get; }
 
     public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
@@ -28,21 +30,6 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     public ICommand AddRectangleCommand { get; init; }
 
     public ICommand FlipRightCommand { get; init; }
-    public ICommand FlipLeftCommand { get; init; }
-
-    private bool _isRightButtonEnabled = true;
-    public bool IsRightButtonEnabled
-    {
-        get => _isRightButtonEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isRightButtonEnabled, value);
-    }
-
-    private bool _isLeftButtonEnabled = false;
-    public bool IsLeftButtonEnabled
-    {
-        get => _isLeftButtonEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isLeftButtonEnabled, value);
-    }
 
     private ObservableCollection<FigureViewModel> _dynamicFigures = new();
     public ObservableCollection<FigureViewModel> DynamicFigures
@@ -97,8 +84,9 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     /// <summary>
     /// Конструктор класса MainWindowViewModel. Объявляет в себе несколько реактивных команд и параллельно запускает генерацию истории.
     /// </summary>
-    public MainWindowViewModel(IScreen screen)
+    public MainWindowViewModel(IScreen screen, IServiceProvider servicesProvider)
     {
+        _servicesProvider = servicesProvider;
         HostScreen = screen;
         Log.Logger = LoggerSetup.CreateLogger();
 
@@ -108,7 +96,6 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
         AddRectangleCommand = ReactiveCommand.Create(AddRectangle);
 
         FlipRightCommand = ReactiveCommand.Create(FlipRight);
-        FlipLeftCommand = ReactiveCommand.Create(FlipLeft);
 
         Task.Run(GenerateProgrammHistoryAsync);
     }
@@ -120,19 +107,7 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     {
         Debug.WriteLine("Нажата кнопка направо");
         Log.Logger.Information("Нажата кнопка '>'");
-        IsLeftButtonEnabled = true;
-        IsRightButtonEnabled = false;
-    }
-
-    /// <summary>
-    /// Листает окно налево.
-    /// </summary>
-    private void FlipLeft()
-    {
-        Debug.WriteLine("Нажата кнопка налево");
-        Log.Logger.Information("Нажата кнопка '<'");
-        IsRightButtonEnabled = true;
-        IsLeftButtonEnabled = false;
+        HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<JokesWindowViewModel>());
     }
 
     /// <summary>

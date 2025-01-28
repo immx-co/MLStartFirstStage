@@ -58,11 +58,12 @@ public partial class App : Application
         servicesProvider.AddSingleton<IScreen, IScreenRealization>();
 
         servicesProvider.AddSingleton<InputWindowViewModel>();
-        servicesProvider.AddTransient<AutorizationWindowViewModel>();
         servicesProvider.AddTransient<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
         servicesProvider.AddTransient<MainWindowViewModel>();
+        servicesProvider.AddTransient<JokesWindowViewModel>();
         servicesProvider.AddTransient<RegistrationViewModel>();
+        servicesProvider.AddTransient<AutorizationWindowViewModel>();
 
         servicesProvider.AddSingleton<PasswordHasher>();
 

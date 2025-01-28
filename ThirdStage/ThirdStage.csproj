@@ -45,4 +45,5 @@
       <DependentUpon>AutorizationWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  
 </Project>
