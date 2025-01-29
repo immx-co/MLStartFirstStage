@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive;
 using ThirdStage.Database;
 using Microsoft.Extensions.DependencyInjection;
+using ThirdStage.Database.Models;
 
 namespace ThirdStage.ViewModels;
 

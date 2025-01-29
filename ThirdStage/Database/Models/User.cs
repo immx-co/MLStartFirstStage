@@ -1,4 +1,4 @@
-﻿namespace ThirdStage.Database;
+﻿namespace ThirdStage.Database.Models;
 
 public class User
 {

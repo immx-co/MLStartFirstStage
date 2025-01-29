@@ -27,6 +27,7 @@
                HorizontalAlignment="Center"
                FontSize="16"
                TextWrapping="Wrap"
+               MaxWidth="400"
                Margin="20"/>
     
     <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,10,0">

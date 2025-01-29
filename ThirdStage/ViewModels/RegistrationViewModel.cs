@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Text.RegularExpressions;
 using ThirdStage.Database;
 using Microsoft.Extensions.DependencyInjection;
+using ThirdStage.Database.Models;
 
 namespace ThirdStage.ViewModels
 {

@@ -99,7 +99,7 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
 
         Task.Run(GenerateProgrammHistoryAsync);
     }
-    
+
     /// <summary>
     /// Листает окно направо.
     /// </summary>
@@ -184,11 +184,11 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     /// <param name="figure"></param>
     private void AddFigureContent(IFigure figure)
     {
-        Shape figureType = GetFigureType(figure);
+        //Shape figureType = GetFigureType(figure);
 
         DynamicFigures.Add(new FigureViewModel
         {
-            Figure = figureType,
+            Figure = figure,
             ActionCommand = ReactiveCommand.Create(() => ExecuteFigureAction(figure))
         });
         Log.Logger.Information("Контент фигуры добавлен.");

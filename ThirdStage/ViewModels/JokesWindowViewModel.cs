@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
-using Serilog;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Text.Json;
+using System.Collections.Generic;
+using ThirdStage.Database.Models;
+using ThirdStage.Database;
+using System.Linq;
 
 namespace ThirdStage.ViewModels
 {
@@ -24,9 +27,9 @@ namespace ThirdStage.ViewModels
         #endregion
 
         #region Avalonia Commands Region
-        public ICommand FlipLeftCommand { get; init; }
+        public ICommand FlipLeftCommand => HostScreen.Router.NavigateBack;
 
-        private string _displayedJoke = "There will be a random joke here)))";
+        private string _displayedJoke = "There will be a random joke here.";
         public string DisplayedJoke
         {
             get => _displayedJoke;
@@ -44,27 +47,25 @@ namespace ThirdStage.ViewModels
             _servicesProvider = servicesProvider;
             HostScreen = screen;
 
-            FlipLeftCommand = ReactiveCommand.Create(FlipLeft);
-
             RandomJokeCommand = ReactiveCommand.Create(GetRandomJoke);
             RandomTenCommand = ReactiveCommand.Create(GetRandomTen);
             RandomJokesCommand = ReactiveCommand.Create(GetRandomJokes);
             TenJokesCommand = ReactiveCommand.Create(GetTenJokes);
         }
 
-        private void FlipLeft()
-        {
-            HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<MainWindowViewModel>());
-            Log.Logger.Information("Нажата кнопка '<'");
-        }
-
         #region Jokes Functions Region
         private async Task GetRandomJoke()
         {
-            string? joke = await GetRequestData("random_joke");
-            if (joke != null)
+            string? deserializedJoke = await GetRequestData("random_joke");
+            if (deserializedJoke != null)
             {
-                DisplayedJoke = joke;
+                Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
+
+                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+
+                DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
+                db.Jokes.AddRange(joke);
+                db.SaveChanges();
             }
             else
             {
@@ -74,10 +75,19 @@ namespace ThirdStage.ViewModels
 
         private async Task GetRandomTen()
         {
-            string? joke = await GetRequestData("random_ten");
-            if (joke != null)
+            string? deserializedJokes = await GetRequestData("random_ten");
+            if (deserializedJokes != null)
             {
-                DisplayedJoke = joke;
+                List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
+
+                DisplayedJoke = string.Empty;
+                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+                foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
+                {
+                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
+                    db.Jokes.AddRange(joke);
+                }
+                db.SaveChanges();
             }
             else
             {
@@ -87,10 +97,16 @@ namespace ThirdStage.ViewModels
 
         private async Task GetRandomJokes()
         {
-            string? joke = await GetRequestData("jokes/random");
-            if (joke != null)
+            string? deserializedJoke = await GetRequestData("jokes/random");
+            if (deserializedJoke != null)
             {
-                DisplayedJoke = joke;
+                Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
+
+                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+
+                DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
+                db.Jokes.AddRange(joke);
+                db.SaveChanges();
             }
             else
             {
@@ -100,10 +116,19 @@ namespace ThirdStage.ViewModels
 
         private async Task GetTenJokes()
         {
-            string? joke = await GetRequestData("jokes/ten");
-            if (joke != null)
+            string? deserializedJokes = await GetRequestData("jokes/ten");
+            if (deserializedJokes != null)
             {
-                DisplayedJoke = joke;
+                List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
+
+                DisplayedJoke = string.Empty;
+                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+                foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
+                {
+                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
+                    db.Jokes.AddRange(joke);
+                }
+                db.SaveChanges();
             }
             else
             {

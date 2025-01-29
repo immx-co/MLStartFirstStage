@@ -1,8 +1,9 @@
-﻿using Avalonia.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using ClassLibrary;
 
 public class FigureViewModel
 {
-    public Control Figure { get; set; } = null!;
+    public IFigure Figure { get; set; } = null!;
+
     public ICommand ActionCommand { get; set; } = null!;
 }
