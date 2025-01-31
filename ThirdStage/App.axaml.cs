@@ -30,7 +30,7 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
 
-            string fileName = "MLstartConfig.json";
+            string fileName = "appsettings.json";
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory
                 .GetCurrentDirectory())
