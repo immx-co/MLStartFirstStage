@@ -12,6 +12,7 @@ using Serilog;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
+using System.Text.Json;
 
 namespace ThirdStage;
 
@@ -31,6 +32,32 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
 
             string fileName = "appsettings.json";
+
+            if (!File.Exists(fileName))
+            {
+                var defaultConfiguration = new
+                {
+                    N = "8",
+                    L = "5",
+                    ConnectionStrings = new
+                    {
+                        stringConnection = "Host=localhost;Port=5432;Database=avaloniadb4;Username=postgres;Password=topiho99"
+                    },
+                    SmtpSettings = new
+                    {
+                        Server = "smtp.yandex.ru",
+                        Port = 587,
+                        Username = "immxxx@yandex.ru",
+                        Password = "default",
+                        EnableSsl = true
+                    }
+                };
+                string jsonConfiguration = JsonSerializer.Serialize(defaultConfiguration, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(fileName, jsonConfiguration);
+
+                Log.Logger.Information("Конфигурация была сохранена по умолчанию успешно. Пароль от почты с рассылками уточните у администратора!");
+            }
+
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory
                 .GetCurrentDirectory())
