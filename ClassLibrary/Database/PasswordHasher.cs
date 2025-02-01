@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ThirdStage.Database;
+namespace ClassLibrary.Database;
 
 public class PasswordHasher
 {

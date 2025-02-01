@@ -6,7 +6,7 @@ using System.Linq;
 using ThirdStage.ViewModels;
 
 using Microsoft.Extensions.DependencyInjection;
-using ThirdStage.Database;
+using ClassLibrary.Database;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System.IO;

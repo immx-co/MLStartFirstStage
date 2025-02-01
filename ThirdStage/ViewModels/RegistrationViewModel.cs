@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Text.RegularExpressions;
-using ThirdStage.Database;
+using ClassLibrary.Database;
+using ClassLibrary.Database.Models;
 using Microsoft.Extensions.DependencyInjection;
-using ThirdStage.Database.Models;
+
 using System.Net.Mail;
 using System.Net;
-using System.Diagnostics;
 
 namespace ThirdStage.ViewModels
 {

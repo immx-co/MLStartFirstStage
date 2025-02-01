@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using System;
 using System.Reactive;
-using ThirdStage.Database;
+using ClassLibrary.Database;
 
 namespace ThirdStage.ViewModels
 {

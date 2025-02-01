@@ -5,7 +5,7 @@ using MsBox.Avalonia;
 using ReactiveUI;
 using Serilog;
 using System;
-using ThirdStage.Database;
+using ClassLibrary.Database;
 
 namespace ThirdStage.ViewModels
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ThirdStage.Database.Models;
+namespace ClassLibrary.Database.Models;
 
 public class Joke
 {

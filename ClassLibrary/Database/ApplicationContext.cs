@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ThirdStage.Database.Models;
+using ClassLibrary.Database.Models;
 
-namespace ThirdStage.Database;
+namespace ClassLibrary.Database;
 
 public class ApplicationContext : DbContext
 {

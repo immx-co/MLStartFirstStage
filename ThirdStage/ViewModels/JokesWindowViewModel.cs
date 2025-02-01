@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Text.Json;
 using System.Collections.Generic;
-using ThirdStage.Database.Models;
-using ThirdStage.Database;
+using ClassLibrary.Database;
+using ClassLibrary.Database.Models;
 using System.Linq;
 
 namespace ThirdStage.ViewModels
