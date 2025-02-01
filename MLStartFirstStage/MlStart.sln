@@ -22,6 +22,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoutingExample", "..\Routin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpPractice", "..\HttpPractice\HttpPractice.csproj", "{C602422D-2EB8-44E7-9E64-DC64BA59F34E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailConfirmationApp", "..\EmailConfirmationApp\EmailConfirmationApp.csproj", "{A323C80C-B458-4113-9CA6-C62554AA07BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6F2BD8F-EBD6-4090-A889-4FBA30510043} = {E6F2BD8F-EBD6-4090-A889-4FBA30510043}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +57,10 @@ Global
 		{C602422D-2EB8-44E7-9E64-DC64BA59F34E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C602422D-2EB8-44E7-9E64-DC64BA59F34E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C602422D-2EB8-44E7-9E64-DC64BA59F34E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A323C80C-B458-4113-9CA6-C62554AA07BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A323C80C-B458-4113-9CA6-C62554AA07BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A323C80C-B458-4113-9CA6-C62554AA07BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A323C80C-B458-4113-9CA6-C62554AA07BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
