@@ -20,7 +20,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdStage", "..\ThirdStage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoutingExample", "..\RoutingExample\RoutingExample.csproj", "{ACA5DFB1-6400-4901-AA9A-657ED5598EAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailConfirmationApp", "..\EmailConfirmationApp\EmailConfirmationApp.csproj", "{137C6FB6-6624-48B8-917B-FB8E61894A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailConfirmationApp", "..\EmailConfirmationApp\EmailConfirmationApp.csproj", "{137C6FB6-6624-48B8-917B-FB8E61894A39}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6F2BD8F-EBD6-4090-A889-4FBA30510043} = {E6F2BD8F-EBD6-4090-A889-4FBA30510043}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

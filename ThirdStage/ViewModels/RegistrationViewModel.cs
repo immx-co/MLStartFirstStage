@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 using ClassLibrary.Database;
 using ClassLibrary.Database.Models;
 using Microsoft.Extensions.DependencyInjection;
-
 using System.Net.Mail;
 using System.Net;
 
@@ -148,7 +147,7 @@ namespace ThirdStage.ViewModels
                 EnableSsl = bool.Parse(smtpSettings["EnableSsl"]),
             };
 
-            var confirmationLink = $"https://confirmEmail?userId={username}&token={token}";
+            var confirmationLink = $"https://localhost:7576/api/EmailConfirmation/confirmEmail?username={username}&token={token}";
 
             var mailMessage = new MailMessage
             {
@@ -158,8 +157,15 @@ namespace ThirdStage.ViewModels
                 IsBodyHtml = true,
             };
             mailMessage.To.Add(email);
-
-            smtpClient.Send(mailMessage);
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (SmtpException)
+            {
+                ShowMessageBox("Failed", "Не удалось отправить письмо для подтверждения учетной записи.");
+            }
+            
         }
         #endregion
     }

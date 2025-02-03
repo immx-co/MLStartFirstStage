@@ -14,6 +14,13 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
 {
     public ReactiveCommand<Unit, Unit> LoginCommand { get; }
 
+    private string _activeUsername = "";
+    public string ActiveUsername
+    {
+        get => _activeUsername;
+        set => this.RaiseAndSetIfChanged(ref _activeUsername, value);
+    }
+
     public AutorizationWindowViewModel(IScreen screen, IConfiguration configuration, PasswordHasher hasher, IServiceProvider servicesProvider) : base(screen, configuration, hasher, servicesProvider)
     {
         LoginCommand = ReactiveCommand.Create(Login);
@@ -43,6 +50,9 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
             Log.Logger.Warning($"Неверный пароль у {Nickname}");
             return;
         }
+        ActiveUsername = Nickname;
         HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<MainWindowViewModel>());
+        Nickname = string.Empty;
+        Password = string.Empty;
     }
 }

@@ -11,12 +11,15 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
+using ClassLibrary.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace ThirdStage.ViewModels;
 
 public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
 {
     public IServiceProvider _servicesProvider;
+    public InputWindowViewModel _inputWindowViewModel;
 
     public IScreen HostScreen { get; }
 
@@ -84,8 +87,9 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     /// <summary>
     /// Конструктор класса MainWindowViewModel. Объявляет в себе несколько реактивных команд и параллельно запускает генерацию истории.
     /// </summary>
-    public MainWindowViewModel(IScreen screen, IServiceProvider servicesProvider)
+    public MainWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel)
     {
+        _inputWindowViewModel = inputWindowViewModel;
         _servicesProvider = servicesProvider;
         HostScreen = screen;
         Log.Logger = LoggerSetup.CreateLogger();
@@ -98,6 +102,7 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
         FlipRightCommand = ReactiveCommand.Create(FlipRight);
 
         Task.Run(GenerateProgrammHistoryAsync);
+        Task.Run(StartEmailVerificationWatcher);
     }
 
     /// <summary>
@@ -217,7 +222,6 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
             });
             Log.Logger.Debug($"Параллельно добавлено событие: {figureAbility}");
         }
-        
     }
 
     /// <summary>
@@ -307,5 +311,26 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
                 Margin = new Avalonia.Thickness(5, 6.4)
             };
         }
+    }
+
+    private async void StartEmailVerificationWatcher()
+    {
+        string activeUsername = _servicesProvider.GetRequiredService<AutorizationWindowViewModel>().ActiveUsername;
+        while (true)
+        {
+            bool isVerified = await CheckEmailVerificationStatusAsync(activeUsername);
+            _inputWindowViewModel.IsVerifiedEmail = isVerified;
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+        }
+    }
+
+    private async Task<bool> CheckEmailVerificationStatusAsync(string activeUsername)
+    {
+        using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
+
+        var user = await db.Users.FirstOrDefaultAsync(u => u.Name == activeUsername);
+        return user?.IsVerifiedEmail ?? false;
+
     }
 }

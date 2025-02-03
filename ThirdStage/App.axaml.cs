@@ -90,7 +90,7 @@ public partial class App : Application
         servicesProvider.AddTransient<MainWindowViewModel>();
         servicesProvider.AddSingleton<JokesWindowViewModel>();
         servicesProvider.AddTransient<RegistrationViewModel>();
-        servicesProvider.AddTransient<AutorizationWindowViewModel>();
+        servicesProvider.AddSingleton<AutorizationWindowViewModel>();
 
         servicesProvider.AddSingleton<PasswordHasher>();
 
