@@ -41,7 +41,7 @@ public partial class App : Application
                     L = "5",
                     ConnectionStrings = new
                     {
-                        stringConnection = "Host=localhost;Port=5432;Database=avaloniadb4;Username=postgres;Password=topiho99"
+                        stringConnection = "Host=localhost;Port=5432;Database=avaloniadb4;Username=postgres;Password=default"
                     },
                     SmtpSettings = new
                     {
@@ -88,8 +88,8 @@ public partial class App : Application
         servicesProvider.AddTransient<FigureViewModel>();
         servicesProvider.AddSingleton<InputMainPageViewModel>();
         servicesProvider.AddTransient<MainWindowViewModel>();
-        servicesProvider.AddSingleton<JokesWindowViewModel>();
-        servicesProvider.AddSingleton<ImageProcessingViewModel>();
+        servicesProvider.AddTransient<JokesWindowViewModel>();
+        servicesProvider.AddTransient<ImageProcessingViewModel>();
         servicesProvider.AddTransient<RegistrationViewModel>();
         servicesProvider.AddSingleton<AutorizationWindowViewModel>();
 

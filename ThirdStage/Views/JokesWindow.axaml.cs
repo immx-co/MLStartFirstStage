@@ -9,7 +9,6 @@ public partial class JokesWindow : ReactiveUserControl<JokesWindowViewModel>
 {
     public JokesWindow()
     {
-        this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
     }
 }

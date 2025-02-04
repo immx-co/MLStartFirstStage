@@ -9,7 +9,6 @@ public partial class ImageProcessingWindow : ReactiveUserControl<ImageProcessing
 {
     public ImageProcessingWindow()
     {
-        this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
     }
 }
