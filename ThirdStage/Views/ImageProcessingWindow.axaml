@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:vm="using:ThirdStage.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ThirdStage.ImageProcessingWindow"
+             x:DataType="vm:ImageProcessingViewModel">
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Button Grid.Column="0"
+            Grid.Row="1"
+            Content="&lt;"
+            Width="30"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Margin="10, 0, 10, 0"
+            Command="{Binding FlipLeftCommand}" />
+
+    <TextBox Grid.Column="1"
+             Grid.Row="0"
+             Watermark="Введите url для отправки изображения на обработку здесь..."
+             Text="{Binding InputUrl, Mode=TwoWay}"
+             Margin="10" />
+
+    <Image Grid.Column="1"
+           Grid.Row="1"
+           Margin="0 ,0, 10, 0"
+           Source="{Binding SelectedImage}"
+           Stretch="UniformToFill" />
+
+    <StackPanel Grid.Column="1"
+                Grid.Row="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Margin="10"
+                Spacing="10">
+      <Button Content="Выбрать изображение для обработки"
+              Command="{Binding SelectImageCommand}" />
+
+      <Button Content="Отправить изображение на обработку" />
+    </StackPanel>
+  </Grid>
+</UserControl>

@@ -11,6 +11,7 @@ namespace ThirdStage
         {
             MainWindowViewModel context => new MainWindow { ViewModel = context },
             JokesWindowViewModel context => new JokesWindow { ViewModel = context },
+            ImageProcessingViewModel context => new ImageProcessingWindow { ViewModel = context },
             InputMainPageViewModel context => new InputMainPageWindow { ViewModel = context },
             AutorizationWindowViewModel context => new AutorizationWindow { ViewModel = context },
             RegistrationViewModel context => new RegistrationWindow { ViewModel = context },

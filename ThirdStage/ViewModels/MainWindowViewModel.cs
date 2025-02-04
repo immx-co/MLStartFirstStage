@@ -189,8 +189,6 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     /// <param name="figure"></param>
     private void AddFigureContent(IFigure figure)
     {
-        //Shape figureType = GetFigureType(figure);
-
         DynamicFigures.Add(new FigureViewModel
         {
             Figure = figure,

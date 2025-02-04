@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using ClassLibrary.Database;
 using ClassLibrary.Database.Models;
 using System.Linq;
+using Serilog;
+using System.Diagnostics;
 
 namespace ThirdStage.ViewModels
 {
@@ -28,6 +30,7 @@ namespace ThirdStage.ViewModels
 
         #region Avalonia Commands Region
         public ICommand FlipLeftCommand => HostScreen.Router.NavigateBack;
+        public ICommand FlipRightCommand { get; init; }
 
         private string _displayedJoke = "There will be a random joke here.";
         public string DisplayedJoke
@@ -51,7 +54,17 @@ namespace ThirdStage.ViewModels
             RandomTenCommand = ReactiveCommand.Create(GetRandomTen);
             RandomJokesCommand = ReactiveCommand.Create(GetRandomJokes);
             TenJokesCommand = ReactiveCommand.Create(GetTenJokes);
+
+            FlipRightCommand = ReactiveCommand.Create(FlipRight);
         }
+
+        #region Move Windows Region
+        private void FlipRight()
+        {
+            Log.Logger.Information("JokesWindowViewModel: Нажата кнопка '>'");
+            HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<ImageProcessingViewModel>());
+        }
+        #endregion
 
         #region Jokes Functions Region
         private async Task GetRandomJoke()
