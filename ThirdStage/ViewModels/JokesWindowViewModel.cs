@@ -14,14 +14,11 @@ using System.Diagnostics;
 
 namespace ThirdStage.ViewModels
 {
-    public class JokesWindowViewModel : ReactiveObject, IRoutableViewModel
+    public class JokesWindowViewModel : BaseMainWindowViewModel
     {
         #region Default Settings Region
         public IServiceProvider _servicesProvider;
 
-        public IScreen HostScreen { get; }
-
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
         #endregion
 
         #region Http Region
@@ -45,10 +42,9 @@ namespace ThirdStage.ViewModels
         public ICommand TenJokesCommand { get; init; }
         #endregion
 
-        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider)
+        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider) : base(screen)
         {
             _servicesProvider = servicesProvider;
-            HostScreen = screen;
 
             RandomJokeCommand = ReactiveCommand.Create(GetRandomJoke);
             RandomTenCommand = ReactiveCommand.Create(GetRandomTen);

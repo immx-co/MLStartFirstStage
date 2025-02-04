@@ -46,10 +46,21 @@
                 HorizontalAlignment="Center"
                 Margin="10"
                 Spacing="10">
-      <Button Content="Выбрать изображение для обработки"
-              Command="{Binding SelectImageCommand}" />
+      <Ellipse Width="20"
+               Height="20"
+               Fill="{Binding HealthStatusColor}"
+               VerticalAlignment="Center"
+               Margin="0, 0, 10, 0" />
 
-      <Button Content="Отправить изображение на обработку" />
+      <Button Content="Подключиться к введенному URL"
+              Command="{Binding ConnectToUrlCommand}" />
+      
+      <Button Content="Выбрать изображение для обработки"
+              Command="{Binding SelectImageCommand}"
+              IsEnabled="{Binding IsSelectImageButtonEnabled}" />
+
+      <Button Content="Отправить изображение на обработку"
+              IsEnabled="{Binding IsSendImageButtonEnabled}" />
     </StackPanel>
   </Grid>
 </UserControl>

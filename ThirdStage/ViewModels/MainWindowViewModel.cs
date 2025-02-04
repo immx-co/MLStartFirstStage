@@ -16,14 +16,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ThirdStage.ViewModels;
 
-public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
+public partial class MainWindowViewModel : BaseMainWindowViewModel
 {
     public IServiceProvider _servicesProvider;
     public InputWindowViewModel _inputWindowViewModel;
-
-    public IScreen HostScreen { get; }
-
-    public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
     private readonly Kingdom _kingdom = new();
 
@@ -87,11 +83,13 @@ public partial class MainWindowViewModel : ReactiveObject, IRoutableViewModel
     /// <summary>
     /// Конструктор класса MainWindowViewModel. Объявляет в себе несколько реактивных команд и параллельно запускает генерацию истории.
     /// </summary>
-    public MainWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel)
+    /// <param name="inputWindowViewModel"></param>
+    /// <param name="screen"></param>
+    /// <param name="servicesProvider"></param>
+    public MainWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel) : base(screen)
     {
         _inputWindowViewModel = inputWindowViewModel;
         _servicesProvider = servicesProvider;
-        HostScreen = screen;
         Log.Logger = LoggerSetup.CreateLogger();
 
         AddCircleCommand = ReactiveCommand.Create(AddCircle);

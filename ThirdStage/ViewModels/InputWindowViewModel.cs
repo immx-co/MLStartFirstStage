@@ -14,7 +14,7 @@ namespace ThirdStage.ViewModels
         #region ViewModel Settings
         private readonly IServiceProvider _serviceProvider;
 
-        public RoutingState Router { get;  }
+        public RoutingState Router { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> BackToInputWindow { get; }
 
@@ -45,7 +45,10 @@ namespace ThirdStage.ViewModels
             _serviceProvider = serviceProvider;
 
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
-            BackToInputWindow = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>()));
+            BackToInputWindow = ReactiveCommand.CreateFromObservable(() =>
+            {
+                return Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
+            });
             Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<AutorizationWindowViewModel>()));
             Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<RegistrationViewModel>()));
             GoApplication = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<MainWindowViewModel>()));
