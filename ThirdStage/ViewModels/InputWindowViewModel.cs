@@ -6,6 +6,8 @@ using System.Reactive;
 using ClassLibrary.Database;
 using Avalonia.Media;
 using System.Reactive.Linq;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ThirdStage.ViewModels
 {
@@ -16,15 +18,16 @@ namespace ThirdStage.ViewModels
 
         public RoutingState Router { get; }
 
-        public ReactiveCommand<Unit, IRoutableViewModel> BackToInputWindow { get; }
+        public ReactiveCommand<Unit, Unit> BackToInputWindow { get; }
+
+        public ReactiveCommand<Unit, Unit> Input { get; }
+
+        public ReactiveCommand<Unit, Unit> Registration { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> GoApplication { get; }
-
-        public ReactiveCommand<Unit, IRoutableViewModel> Input { get; }
-
-        public ReactiveCommand<Unit, IRoutableViewModel> Registration { get; }
         #endregion
 
+        #region Property Region
         private bool _isVerifiedEmail = false;
         public bool IsVerifiedEmail
         {
@@ -32,7 +35,15 @@ namespace ThirdStage.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isVerifiedEmail, value);
         }
 
-        private readonly ObservableAsPropertyHelper<IBrush> _emailStatusColor;
+        //private bool _isEmailVerificationPending = true;
+        //public bool IsEmailVerificationPending
+        //{
+        //    get => _isEmailVerificationPending;
+        //    set => this.RaiseAndSetIfChanged(ref _isEmailVerificationPending, value);
+        //}
+        #endregion
+
+        private ObservableAsPropertyHelper<IBrush> _emailStatusColor;
         public IBrush EmailStatusColor => _emailStatusColor.Value;
 
         public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider, IScreen screenRealization)
@@ -45,13 +56,40 @@ namespace ThirdStage.ViewModels
             _serviceProvider = serviceProvider;
 
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
-            BackToInputWindow = ReactiveCommand.CreateFromObservable(() =>
-            {
-                return Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
-            });
-            Input = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<AutorizationWindowViewModel>()));
-            Registration = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<RegistrationViewModel>()));
+            BackToInputWindow = ReactiveCommand.Create(NavigateToInputWindow);
+            Input = ReactiveCommand.Create(NavigateToLoginWindow);
+            Registration = ReactiveCommand.Create(NavigateToRegistrationWindow);
             GoApplication = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(_serviceProvider.GetRequiredService<MainWindowViewModel>()));
+        }
+
+        private void NavigateToInputWindow()
+        {
+            CheckDisposedCancelletionToken();
+            Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
+        }
+
+        private void NavigateToLoginWindow()
+        {
+            CheckDisposedCancelletionToken();
+            Router.Navigate.Execute(_serviceProvider.GetRequiredService<AutorizationWindowViewModel>());
+        }
+
+        private void NavigateToRegistrationWindow()
+        {
+            CheckDisposedCancelletionToken();
+            Router.Navigate.Execute(_serviceProvider.GetRequiredService<RegistrationViewModel>());
+        }
+
+        private void CheckDisposedCancelletionToken()
+        {
+            if (Router.NavigationStack.Count > 0)
+            {
+                var currentViewModel = Router.NavigationStack.Last();
+                if (currentViewModel is IDisposable disposableViewModel)
+                {
+                    disposableViewModel.Dispose();
+                }
+            }
         }
     }
 }

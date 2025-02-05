@@ -13,6 +13,8 @@ using Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using ClassLibrary.Database;
 using Microsoft.EntityFrameworkCore;
+using Avalonia.Metadata;
+using System.Threading;
 
 namespace ThirdStage.ViewModels;
 
@@ -99,6 +101,7 @@ public partial class MainWindowViewModel : BaseMainWindowViewModel
 
         FlipRightCommand = ReactiveCommand.Create(FlipRight);
 
+        _cancellationTokenSource = new CancellationTokenSource();
         Task.Run(GenerateProgrammHistoryAsync);
         Task.Run(StartEmailVerificationWatcher);
     }
@@ -205,18 +208,33 @@ public partial class MainWindowViewModel : BaseMainWindowViewModel
     {
         while (true)
         {
-            await Task.Delay(2000);
-            IFigure? randomFigure = GetRandomFigure(_kingdom.GetFigures());
-            if (randomFigure is null)
+            try
             {
-                continue;
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                IFigure? randomFigure = GetRandomFigure(_kingdom.GetFigures());
+                if (randomFigure is null)
+                {
+                    continue;
+                }
+                string figureAbility = randomFigure.Ability();
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    History += Environment.NewLine + Environment.NewLine + figureAbility;
+                });
+                Log.Logger.Debug($"Параллельно добавлено событие: {figureAbility}");
+                await Task.Delay(2000);
             }
-            string figureAbility = randomFigure.Ability();
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            catch (OperationCanceledException)
             {
-                History += Environment.NewLine + Environment.NewLine + figureAbility;
-            });
-            Log.Logger.Debug($"Параллельно добавлено событие: {figureAbility}");
+                Log.Logger.Information("Watcher подтверждения верификации почты был остановлен.");
+                return;
+            }
+            catch (ObjectDisposedException)
+            {
+                Log.Logger.Information("Watcher подтверждения верификации почты был остановлен.");
+                return;
+            }
+
         }
     }
 
@@ -314,10 +332,25 @@ public partial class MainWindowViewModel : BaseMainWindowViewModel
         string activeUsername = _servicesProvider.GetRequiredService<AutorizationWindowViewModel>().ActiveUsername;
         while (true)
         {
-            bool isVerified = await CheckEmailVerificationStatusAsync(activeUsername);
-            _inputWindowViewModel.IsVerifiedEmail = isVerified;
+            try
+            {
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                bool isVerified = await CheckEmailVerificationStatusAsync(activeUsername);
+                _inputWindowViewModel.IsVerifiedEmail = isVerified;
 
-            await Task.Delay(TimeSpan.FromSeconds(3));
+                await Task.Delay(TimeSpan.FromSeconds(3));
+            }
+            catch (OperationCanceledException)
+            {
+                Log.Logger.Information("Watcher подтверждения верификации почты был остановлен.");
+                return;
+            }
+            catch (ObjectDisposedException)
+            {
+                Log.Logger.Information("Watcher подтверждения верификации почты был остановлен.");
+                return;
+            }
+            
         }
     }
 

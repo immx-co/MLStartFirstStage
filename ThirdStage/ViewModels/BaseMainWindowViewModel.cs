@@ -1,22 +1,25 @@
 ﻿using ReactiveUI;
 using System;
+using System.Threading;
 
 namespace ThirdStage.ViewModels;
 
-public class BaseMainWindowViewModel : ReactiveObject, IRoutableViewModel, IActivatableViewModel
+public class BaseMainWindowViewModel : ReactiveObject, IRoutableViewModel, IDisposable
 {
     public IScreen HostScreen { get; }
 
     public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
-    public ViewModelActivator Activator { get; }
-
-    public event EventHandler<bool> SuccessfullLogoutEvent;
+    public CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     public BaseMainWindowViewModel(IScreen screen)
     {
         HostScreen = screen;
+    }
 
-        Activator = new();
+    public void Dispose()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
     }
 }

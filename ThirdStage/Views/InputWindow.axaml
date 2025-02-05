@@ -9,7 +9,7 @@
         x:Class="ThirdStage.InputWindow"
         Title="InputWindow"
         MinHeight="500"
-        MinWidth="1500"
+        MinWidth="1300"
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
         x:DataType="vm:InputWindowViewModel"

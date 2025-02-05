@@ -13,6 +13,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace ThirdStage.ViewModels
 {
@@ -20,6 +22,7 @@ namespace ThirdStage.ViewModels
     {
         #region Default Settings Region
         public IServiceProvider _servicesProvider;
+        public InputWindowViewModel _inputWindowViewModel;
 
         #endregion
 
@@ -76,9 +79,10 @@ namespace ThirdStage.ViewModels
         public ReactiveCommand<Unit, Unit> ProcessImageCommand { get; }
         #endregion
 
-        public ImageProcessingViewModel(IScreen screen, IServiceProvider servicesProvider) : base(screen)
+        public ImageProcessingViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel) : base(screen)
         {
             _servicesProvider = servicesProvider;
+            _inputWindowViewModel = inputWindowViewModel;
             Log.Logger = LoggerSetup.CreateLogger();
 
             SelectImageCommand = ReactiveCommand.CreateFromTask(SelectImageAsync);
@@ -110,7 +114,7 @@ namespace ThirdStage.ViewModels
         }
 
         private async Task ConnectToUrlAsync()
-        {
+        { 
             IsButtonsEnabled(false);
             HealthStatusColor = Brushes.Gray;
             if (string.IsNullOrEmpty(InputUrl))
@@ -132,10 +136,38 @@ namespace ThirdStage.ViewModels
 
                     if (result?.StatusCode == 200)
                     {
+                        if (!_inputWindowViewModel.IsVerifiedEmail)
+                        {
+                            var questionBox = MessageBoxManager.GetMessageBoxStandard(
+                                "Подтверждение",
+                                "У вас неподтвержденная учетная запись. В качестве демонстрационных целей готов Вам предоставить доступ к нейросетевому сервису. Вы уверены, что хотите продолжить?",
+                                ButtonEnum.YesNo,
+                                Icon.Question
+                            );
+
+                            var questionResult = await questionBox.ShowAsync();
+
+                            if (questionResult == ButtonResult.No)
+                            {
+                                Log.Logger.Information("Пользователь отказался от подключения.");
+                                HealthStatusColor = Brushes.Red;
+                                SelectedImage = null;
+                                ImageInfo = string.Empty;
+                                IsButtonsEnabled(false);
+                                return;
+                            }
+                        }
                         Log.Logger.Information("Успешное подключение к нейросетевому сервису.");
                         HealthStatusColor = Brushes.Green;
                         _savedInputUrl = InputUrl;
                         IsButtonsEnabled(true);
+                        var successBox = MessageBoxManager.GetMessageBoxStandard(
+                            "Успех",
+                            "Вы успешно подключились к нейросетевому сервису.",
+                            ButtonEnum.Ok,
+                            Icon.Success
+                        );
+                        await successBox.ShowAsync();
                     }
                     else
                     {
@@ -144,6 +176,13 @@ namespace ThirdStage.ViewModels
                         SelectedImage = null;
                         ImageInfo = string.Empty;
                         IsButtonsEnabled(false);
+                        var failedBox = MessageBoxManager.GetMessageBoxStandard(
+                            "Ошибка",
+                            "Подключиться к нейросетевому сервису не удалось. StatusCode в json ответе != 200.",
+                            ButtonEnum.Ok,
+                            Icon.Warning
+                        );
+                        await failedBox.ShowAsync();
                     }
                 }
                 else
@@ -153,6 +192,13 @@ namespace ThirdStage.ViewModels
                     SelectedImage = null;
                     ImageInfo = string.Empty;
                     IsButtonsEnabled(false);
+                    var failedBox = MessageBoxManager.GetMessageBoxStandard(
+                            "Ошибка",
+                            $"Не удалось обратиться к нейросетевому сервису по URL: {InputUrl}",
+                            ButtonEnum.Ok,
+                            Icon.Warning
+                        );
+                    await failedBox.ShowAsync();
                 }
             }
             catch (Exception ex)
@@ -162,6 +208,13 @@ namespace ThirdStage.ViewModels
                 SelectedImage = null;
                 ImageInfo = string.Empty;
                 IsButtonsEnabled(false);
+                var failedBox = MessageBoxManager.GetMessageBoxStandard(
+                            "Ошибка",
+                            $"Возникло непредвиденное исключение при попытке обратиться к нейросетевому сервису. ex: {ex}",
+                            ButtonEnum.Ok,
+                            Icon.Warning
+                        );
+                await failedBox.ShowAsync();
             }
         }
 
