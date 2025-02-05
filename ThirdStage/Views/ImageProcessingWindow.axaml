@@ -11,6 +11,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
 
     <Grid.RowDefinitions>
@@ -40,6 +41,17 @@
            Source="{Binding SelectedImage}"
            Stretch="UniformToFill" />
 
+    <StackPanel Grid.Column="2"
+                Grid.Row="1"
+                Orientation="Vertical"
+                VerticalAlignment="Center"
+                Margin="10, 0, 10, 0"
+                Spacing="5">
+      <TextBlock Text="{Binding ImageInfo}"
+                 FontSize="14"
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
     <StackPanel Grid.Column="1"
                 Grid.Row="2"
                 Orientation="Horizontal"
@@ -60,6 +72,7 @@
               IsEnabled="{Binding IsSelectImageButtonEnabled}" />
 
       <Button Content="Отправить изображение на обработку"
+              Command="{Binding ProcessImageCommand}"
               IsEnabled="{Binding IsSendImageButtonEnabled}" />
     </StackPanel>
   </Grid>

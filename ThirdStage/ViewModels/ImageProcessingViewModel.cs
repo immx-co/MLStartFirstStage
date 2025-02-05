@@ -4,7 +4,9 @@ using Avalonia.Media.Imaging;
 using ClassLibrary;
 using ReactiveUI;
 using Serilog;
+using SkiaSharp;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Reactive;
 using System.Text.Json;
@@ -28,9 +30,10 @@ namespace ThirdStage.ViewModels
             get => _inputUrl;
             set => this.RaiseAndSetIfChanged(ref _inputUrl, value);
         }
+        private string _savedInputUrl = string.Empty;
 
-        private Bitmap _selectedImage;
-        public Bitmap SelectedImage
+        private Bitmap? _selectedImage;
+        public Bitmap? SelectedImage
         {
             get => _selectedImage;
             set => this.RaiseAndSetIfChanged(ref _selectedImage, value);
@@ -56,6 +59,13 @@ namespace ThirdStage.ViewModels
             get => _isSendImageButtonEnabled;
             set => this.RaiseAndSetIfChanged(ref _isSendImageButtonEnabled, value);
         }
+
+        private string _imageInfo = string.Empty;
+        public string ImageInfo
+        {
+            get => _imageInfo;
+            set => this.RaiseAndSetIfChanged(ref _imageInfo, value);
+        }
         #endregion
 
         #region Commands Region
@@ -63,6 +73,7 @@ namespace ThirdStage.ViewModels
 
         public ReactiveCommand<Unit, Unit> SelectImageCommand { get; }
         public ReactiveCommand<Unit, Unit> ConnectToUrlCommand { get; }
+        public ReactiveCommand<Unit, Unit> ProcessImageCommand { get; }
         #endregion
 
         public ImageProcessingViewModel(IScreen screen, IServiceProvider servicesProvider) : base(screen)
@@ -72,6 +83,7 @@ namespace ThirdStage.ViewModels
 
             SelectImageCommand = ReactiveCommand.CreateFromTask(SelectImageAsync);
             ConnectToUrlCommand = ReactiveCommand.CreateFromTask(ConnectToUrlAsync);
+            ProcessImageCommand = ReactiveCommand.CreateFromTask(ProcessImage);
 
             HealthStatusColor = Brushes.Gray;
             IsSelectImageButtonEnabled = false;
@@ -104,6 +116,7 @@ namespace ThirdStage.ViewModels
             if (string.IsNullOrEmpty(InputUrl))
             {
                 HealthStatusColor = Brushes.Red;
+                SelectedImage = null;
                 return;
             }
 
@@ -121,12 +134,15 @@ namespace ThirdStage.ViewModels
                     {
                         Log.Logger.Information("Успешное подключение к нейросетевому сервису.");
                         HealthStatusColor = Brushes.Green;
+                        _savedInputUrl = InputUrl;
                         IsButtonsEnabled(true);
                     }
                     else
                     {
                         Log.Logger.Information("Подключиться к нейросетевому сервису не удалось. StatusCode в json ответе != 200.");
                         HealthStatusColor = Brushes.Red;
+                        SelectedImage = null;
+                        ImageInfo = string.Empty;
                         IsButtonsEnabled(false);
                     }
                 }
@@ -134,6 +150,8 @@ namespace ThirdStage.ViewModels
                 {
                     Log.Logger.Warning($"Не удалось обратиться к нейросетевому сервису по URL: {InputUrl}");
                     HealthStatusColor = Brushes.Red;
+                    SelectedImage = null;
+                    ImageInfo = string.Empty;
                     IsButtonsEnabled(false);
                 }
             }
@@ -141,7 +159,63 @@ namespace ThirdStage.ViewModels
             {
                 Log.Logger.Warning($"Возникло непредвиденное исключение при попытке обратиться к нейросетевому сервису. ex: {ex}");
                 HealthStatusColor = Brushes.Red;
+                SelectedImage = null;
+                ImageInfo = string.Empty;
                 IsButtonsEnabled(false);
+            }
+        }
+
+        private async Task ProcessImage()
+        {
+            if (SelectedImage == null || HealthStatusColor == Brushes.Red)
+            {
+                Log.Logger.Warning("Изображение не выбрано или нет подключения к нейросетевому сервису.");
+                return;
+            }
+
+            try
+            {
+                using var httpClient = new HttpClient();
+                using var content = new MultipartFormDataContent();
+
+                var imageStream = new MemoryStream();
+                SelectedImage.Save(imageStream);
+                imageStream.Seek(0, SeekOrigin.Begin);
+
+                var imageContent = new StreamContent(imageStream);
+                imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+                content.Add(imageContent, "image", "image.jpg");
+
+                var response = await httpClient.PostAsync($"{_savedInputUrl}/resize_image", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Log.Logger.Information("Изображение успешно отправлено на обработку.");
+
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<ImageProcessingResponse>(jsonResponse);
+
+                    if (result != null)
+                    {
+                        Log.Logger.Information($"Результат обработки: Width={result.Width}, Height={result.Height}, Channels={result.Channels}");
+                        ImageInfo = $"Ширина: {result.Width}\nВысота: {result.Height}\nКоличество каналов: {result.Channels}";
+                    }
+                    else
+                    {
+                        Log.Logger.Warning("Не удалось десериализовать ответ от сервера.");
+                        ImageInfo = "Ошибка: неверный формат ответа.";
+                    }
+                }
+                else
+                {
+                    Log.Logger.Warning($"Ошибка при отправке изображения: {response.StatusCode}");
+                    ImageInfo = $"Ошибка при отправке изображения: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Ошибка при отправке изображения. ex: {ex.Message}");
+                ImageInfo = $"Ошибка: {ex.Message}";
             }
         }
 
@@ -159,6 +233,18 @@ namespace ThirdStage.ViewModels
 
             [JsonPropertyName("datetime")]
             public DateTime Datetime {  get; set; }
+        }
+
+        private class ImageProcessingResponse
+        {
+            [JsonPropertyName("width")]
+            public int Width { get; set; }
+
+            [JsonPropertyName("height")]
+            public int Height { get; set; }
+
+            [JsonPropertyName("status_code")]
+            public int Channels { get; set; }
         }
     }
 }
