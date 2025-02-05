@@ -92,6 +92,7 @@ public partial class MainWindowViewModel : BaseMainWindowViewModel
     {
         _inputWindowViewModel = inputWindowViewModel;
         _servicesProvider = servicesProvider;
+        _inputWindowViewModel.IsEmailVerificationPending = false;
         Log.Logger = LoggerSetup.CreateLogger();
 
         AddCircleCommand = ReactiveCommand.Create(AddCircle);

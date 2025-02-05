@@ -35,12 +35,12 @@ namespace ThirdStage.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isVerifiedEmail, value);
         }
 
-        //private bool _isEmailVerificationPending = true;
-        //public bool IsEmailVerificationPending
-        //{
-        //    get => _isEmailVerificationPending;
-        //    set => this.RaiseAndSetIfChanged(ref _isEmailVerificationPending, value);
-        //}
+        private bool _isEmailVerificationPending = true;
+        public bool IsEmailVerificationPending
+        {
+            get => _isEmailVerificationPending;
+            set => this.RaiseAndSetIfChanged(ref _isEmailVerificationPending, value);
+        }
         #endregion
 
         private ObservableAsPropertyHelper<IBrush> _emailStatusColor;
@@ -48,8 +48,10 @@ namespace ThirdStage.ViewModels
 
         public InputWindowViewModel(PasswordHasher hasher, IConfiguration configuration, IServiceProvider serviceProvider, IScreen screenRealization)
         {
-            this.WhenAnyValue(x => x.IsVerifiedEmail)
-                .Select(isVerified => isVerified ? Brushes.Green : Brushes.Red)
+            this.WhenAnyValue(
+                x => x.IsVerifiedEmail, 
+                x => x.IsEmailVerificationPending,
+                (isVerified, isPending) => isPending ? Brushes.Gray : (isVerified ? Brushes.Green : Brushes.Red))
                 .ToProperty(this, x => x.EmailStatusColor, out _emailStatusColor);
 
             Router = screenRealization.Router;
@@ -65,18 +67,21 @@ namespace ThirdStage.ViewModels
         private void NavigateToInputWindow()
         {
             CheckDisposedCancelletionToken();
+            IsEmailVerificationPending = true;
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<InputMainPageViewModel>());
         }
 
         private void NavigateToLoginWindow()
         {
             CheckDisposedCancelletionToken();
+            IsEmailVerificationPending = true;
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<AutorizationWindowViewModel>());
         }
 
         private void NavigateToRegistrationWindow()
         {
             CheckDisposedCancelletionToken();
+            IsEmailVerificationPending = true;
             Router.Navigate.Execute(_serviceProvider.GetRequiredService<RegistrationViewModel>());
         }
 
