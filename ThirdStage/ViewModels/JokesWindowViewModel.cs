@@ -18,6 +18,7 @@ namespace ThirdStage.ViewModels
     {
         #region Default Settings Region
         public IServiceProvider _servicesProvider;
+        public InputWindowViewModel _inputWindowViewModel;
 
         #endregion
 
@@ -26,7 +27,7 @@ namespace ThirdStage.ViewModels
         #endregion
 
         #region Avalonia Commands Region
-        public ICommand FlipLeftCommand => HostScreen.Router.NavigateBack;
+        public ICommand FlipLeftCommand { get; set; }
         public ICommand FlipRightCommand { get; init; }
 
         private string _displayedJoke = "There will be a random joke here.";
@@ -42,9 +43,12 @@ namespace ThirdStage.ViewModels
         public ICommand TenJokesCommand { get; init; }
         #endregion
 
-        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider) : base(screen)
+        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel) : base(screen)
         {
             _servicesProvider = servicesProvider;
+            _inputWindowViewModel = inputWindowViewModel;
+
+            _inputWindowViewModel.AreNavigationButtonsEnabled = false;
 
             RandomJokeCommand = ReactiveCommand.Create(GetRandomJoke);
             RandomTenCommand = ReactiveCommand.Create(GetRandomTen);
@@ -52,6 +56,7 @@ namespace ThirdStage.ViewModels
             TenJokesCommand = ReactiveCommand.Create(GetTenJokes);
 
             FlipRightCommand = ReactiveCommand.Create(FlipRight);
+            FlipLeftCommand = ReactiveCommand.Create(FlipLeft);
         }
 
         #region Move Windows Region
@@ -59,6 +64,13 @@ namespace ThirdStage.ViewModels
         {
             Log.Logger.Information("JokesWindowViewModel: Нажата кнопка '>'");
             HostScreen.Router.Navigate.Execute(_servicesProvider.GetRequiredService<ImageProcessingViewModel>());
+        }
+
+        private void FlipLeft()
+        {
+            Log.Logger.Information("JokesWindowViewModel: Нажата кнопка '<'");
+            _inputWindowViewModel.AreNavigationButtonsEnabled = true;
+            HostScreen.Router.NavigateBack.Execute();
         }
         #endregion
 

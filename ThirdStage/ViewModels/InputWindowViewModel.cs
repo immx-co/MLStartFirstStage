@@ -41,6 +41,13 @@ namespace ThirdStage.ViewModels
             get => _isEmailVerificationPending;
             set => this.RaiseAndSetIfChanged(ref _isEmailVerificationPending, value);
         }
+
+        private bool _areNavigationButtonsEnabled = true;
+        public bool AreNavigationButtonsEnabled
+        {
+            get => _areNavigationButtonsEnabled;
+            set => this.RaiseAndSetIfChanged(ref _areNavigationButtonsEnabled, value);
+        }
         #endregion
 
         private ObservableAsPropertyHelper<IBrush> _emailStatusColor;

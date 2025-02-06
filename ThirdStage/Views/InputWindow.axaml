@@ -36,10 +36,18 @@
           </Style>
         </StackPanel.Styles>
 
-        <Ellipse Width="20" Height="20" Fill="{Binding EmailStatusColor}"></Ellipse>
-        <Button Content="Main Page" Command="{Binding BackToInputWindow}"></Button>
-        <Button Content="Login" Command="{Binding Input}"></Button>
-        <Button Content="Registration" Command="{Binding Registration}"></Button>
+        <Ellipse Width="20" 
+                 Height="20" 
+                 Fill="{Binding EmailStatusColor}" />
+        <Button Content="Main Page" 
+                Command="{Binding BackToInputWindow}"
+                IsEnabled="{Binding AreNavigationButtonsEnabled}" />
+        <Button Content="Login" 
+                Command="{Binding Input}"
+                IsEnabled="{Binding AreNavigationButtonsEnabled}" />
+        <Button Content="Registration" 
+                Command="{Binding Registration}"
+                IsEnabled="{Binding AreNavigationButtonsEnabled}" />
       </StackPanel>
 
       <rxui:RoutedViewHost Grid.Row="1" Router="{Binding Router}">

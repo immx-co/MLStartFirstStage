@@ -83,6 +83,9 @@ namespace ThirdStage.ViewModels
         {
             _servicesProvider = servicesProvider;
             _inputWindowViewModel = inputWindowViewModel;
+
+            _inputWindowViewModel.AreNavigationButtonsEnabled = false;
+
             Log.Logger = LoggerSetup.CreateLogger();
 
             SelectImageCommand = ReactiveCommand.CreateFromTask(SelectImageAsync);
