@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailConfirmationApp", "..\
 		{E6F2BD8F-EBD6-4090-A889-4FBA30510043} = {E6F2BD8F-EBD6-4090-A889-4FBA30510043}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRApplication", "..\SignalRApplication\SignalRApplication.csproj", "{2E7F8233-C70F-4A0B-9DB2-BEDDE0754ADF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{137C6FB6-6624-48B8-917B-FB8E61894A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{137C6FB6-6624-48B8-917B-FB8E61894A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{137C6FB6-6624-48B8-917B-FB8E61894A39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E7F8233-C70F-4A0B-9DB2-BEDDE0754ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E7F8233-C70F-4A0B-9DB2-BEDDE0754ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E7F8233-C70F-4A0B-9DB2-BEDDE0754ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E7F8233-C70F-4A0B-9DB2-BEDDE0754ADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

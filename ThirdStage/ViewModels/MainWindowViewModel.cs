@@ -13,7 +13,6 @@ using Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using ClassLibrary.Database;
 using Microsoft.EntityFrameworkCore;
-using Avalonia.Metadata;
 using System.Threading;
 
 namespace ThirdStage.ViewModels;
@@ -351,7 +350,6 @@ public partial class MainWindowViewModel : BaseMainWindowViewModel
                 Log.Logger.Information("Watcher подтверждения верификации почты был остановлен.");
                 return;
             }
-            
         }
     }
 

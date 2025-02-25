@@ -13,6 +13,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using System.Text.Json;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ThirdStage;
 
@@ -62,10 +63,12 @@ public partial class App : Application
                 .SetBasePath(Directory
                 .GetCurrentDirectory())
                 .AddJsonFile(fileName).Build();
-
             Log.Logger.Information("Конфигурация загружена успешно.");
 
             ServiceProvider servicesProvider = ServicesRegister(configuration);
+
+            servicesProvider.GetRequiredService<HubConnectionWrapper>().Start();
+            Log.Logger.Information("Оформлено подкючение к хабу.");
 
             desktop.MainWindow = new InputWindow
             {
@@ -96,6 +99,8 @@ public partial class App : Application
         servicesProvider.AddSingleton<PasswordHasher>();
 
         servicesProvider.AddDbContext<ApplicationContext>(options => options.UseNpgsql(configuration.GetConnectionString("stringConnection")), ServiceLifetime.Transient);
+
+        servicesProvider.AddSingleton<HubConnectionWrapper>();
 
         return servicesProvider.BuildServiceProvider();
     }

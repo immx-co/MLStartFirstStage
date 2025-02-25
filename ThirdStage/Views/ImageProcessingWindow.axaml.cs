@@ -1,6 +1,5 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
 using ThirdStage.ViewModels;
 
 namespace ThirdStage;
