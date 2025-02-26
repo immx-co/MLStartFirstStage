@@ -43,4 +43,9 @@ public class HubConnectionWrapper
     {
         await Connection.InvokeAsync("Login", nickName, password);
     }
+
+    public async Task Registration(string nickName, string password, string email, string nickNamePattern)
+    {
+        await Connection.InvokeAsync("Registration", nickName, password, email, nickNamePattern);
+    }
 }

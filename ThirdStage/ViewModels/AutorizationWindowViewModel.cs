@@ -50,7 +50,7 @@ public partial class AutorizationWindowViewModel : BaseAuthRegisterViewModel
             });
         });
 
-        _hubConnectionWrapper.Connection.On("Ok", () =>
+        _hubConnectionWrapper.Connection.On("OkAuthorization", () =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
