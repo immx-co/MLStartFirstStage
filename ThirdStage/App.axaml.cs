@@ -43,14 +43,6 @@ public partial class App : Application
                     ConnectionStrings = new
                     {
                         stringConnection = "Host=localhost;Port=5432;Database=avaloniadb4;Username=postgres;Password=default"
-                    },
-                    SmtpSettings = new
-                    {
-                        Server = "smtp.yandex.ru",
-                        Port = 587,
-                        Username = "immxxx@yandex.ru",
-                        Password = "default",
-                        EnableSsl = true
                     }
                 };
                 string jsonConfiguration = JsonSerializer.Serialize(defaultConfiguration, new JsonSerializerOptions { WriteIndented = true });

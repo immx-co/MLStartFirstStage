@@ -20,12 +20,6 @@ public class NotificationHub : Hub
         _hasher = hasher;
     }
 
-    public Task SendMessage(string message)
-    {
-        return Clients.Caller.SendAsync("Send", "eshkere");
-        ;
-    }
-
     public Task Login(string nickName, string password)
     {
         using ApplicationContext db = _serviceProvider.GetRequiredService<ApplicationContext>();
