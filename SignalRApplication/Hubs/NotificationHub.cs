@@ -5,6 +5,7 @@ using Serilog;
 using System.Diagnostics.Tracing;
 using System.Net;
 using System.Net.Mail;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace SignalRApplication.Hubs;
@@ -13,6 +14,8 @@ public class NotificationHub : Hub
 {
     IServiceProvider _serviceProvider;
     PasswordHasher _hasher;
+
+    public HttpClient client = new HttpClient();
 
     public NotificationHub(IServiceProvider serviceProvider, PasswordHasher hasher)
     {
@@ -89,6 +92,110 @@ public class NotificationHub : Hub
         await Clients.Caller.SendAsync("OkRegistration");
         return;
     }
+
+    #region Jokes Region
+    public async Task GetRandomJoke()
+    {
+        string? deserializedJoke = await GetRequestData("random_joke");
+        if (deserializedJoke != null)
+        {
+            Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
+
+            await Clients.Caller.SendAsync("GetRandomJokeOk", joke);
+
+            using ApplicationContext db = _serviceProvider.GetRequiredService<ApplicationContext>();
+            
+            db.Jokes.AddRange(joke);
+            db.SaveChanges();
+        }
+        else
+        {
+            await Clients.Caller.SendAsync("GetRandomJokeNotOk");
+        }
+        return;
+    }
+
+    public async Task GetRandomTen()
+    {
+        string? deserializedJokes = await GetRequestData("random_ten");
+        if (deserializedJokes != null)
+        {
+            List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
+
+            await Clients.Caller.SendAsync("GetRandomTenClear");
+            using ApplicationContext db = _serviceProvider.GetRequiredService<ApplicationContext>();
+            foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
+            {
+                await Clients.Caller.SendAsync("GetRandomTenPostOneJoke", index, joke);
+                db.Jokes.AddRange(joke);
+            }
+        }
+        else
+        {
+            await Clients.Caller.SendAsync("GetRandomTenNotOk");
+        }
+        return;
+    }
+
+    public async Task GetRandomJokes()
+    {
+        string? deserializedJoke = await GetRequestData("jokes/random");
+        if (deserializedJoke != null)
+        {
+            Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
+
+            await Clients.Caller.SendAsync("GetRandomJokesOk", joke);
+
+            using ApplicationContext db = _serviceProvider.GetRequiredService<ApplicationContext>();
+            
+            db.Jokes.AddRange(joke);
+            db.SaveChanges();
+        }
+        else
+        {
+            await Clients.Caller.SendAsync("GetRandomJokesNotOk");
+        }
+    }
+
+    public async Task GetTenJokes()
+    {
+        string? deserializedJokes = await GetRequestData("jokes/ten");
+        if (deserializedJokes != null)
+        {
+            List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
+
+            await Clients.Caller.SendAsync("GetTenJokesClear");
+            using ApplicationContext db = _serviceProvider.GetRequiredService<ApplicationContext>();
+            foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
+            {
+                await Clients.Caller.SendAsync("GetTenJokesPostOneJoke", index, joke);
+                db.Jokes.AddRange(joke);
+            }
+            db.SaveChanges();
+        }
+        else
+        {
+            await Clients.Caller.SendAsync("GetTenJokesNotOk");
+        }
+    }
+
+    private async Task<string?> GetRequestData(string endpoint)
+    {
+        try
+        {
+            using HttpResponseMessage response = await client.GetAsync($"https://official-joke-api.appspot.com/{endpoint}");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            return responseBody;
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+            return null;
+        }
+    }
+    #endregion
 
     #region Email Confirmation Region
     /// <summary>

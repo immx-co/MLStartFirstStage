@@ -11,19 +11,19 @@ using ClassLibrary.Database.Models;
 using System.Linq;
 using Serilog;
 using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ThirdStage.ViewModels
 {
     public class JokesWindowViewModel : BaseMainWindowViewModel
     {
+        HubConnectionWrapper _hubConnectionWrapper;
+
         #region Default Settings Region
         public IServiceProvider _servicesProvider;
         public InputWindowViewModel _inputWindowViewModel;
 
-        #endregion
-
-        #region Http Region
-        public HttpClient client = new HttpClient();
         #endregion
 
         #region Avalonia Commands Region
@@ -37,16 +37,24 @@ namespace ThirdStage.ViewModels
             set => this.RaiseAndSetIfChanged(ref _displayedJoke, value);
         }
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => this.RaiseAndSetIfChanged(ref _isLoading, value);
+        }
+
         public ICommand RandomJokeCommand { get; init; }
         public ICommand RandomTenCommand { get; init; }
         public ICommand RandomJokesCommand { get; init; }
         public ICommand TenJokesCommand { get; init; }
         #endregion
 
-        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel) : base(screen)
+        public JokesWindowViewModel(IScreen screen, IServiceProvider servicesProvider, InputWindowViewModel inputWindowViewModel, HubConnectionWrapper hubConnectionWrapper) : base(screen)
         {
             _servicesProvider = servicesProvider;
             _inputWindowViewModel = inputWindowViewModel;
+            _hubConnectionWrapper = hubConnectionWrapper;
 
             _inputWindowViewModel.AreNavigationButtonsEnabled = false;
 
@@ -57,6 +65,94 @@ namespace ThirdStage.ViewModels
 
             FlipRightCommand = ReactiveCommand.Create(FlipRight);
             FlipLeftCommand = ReactiveCommand.Create(FlipLeft);
+
+            #region Get Random Joke Methods
+            _hubConnectionWrapper.Connection.On<Joke>("GetRandomJokeOk", (joke) =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On("GetRandomJokeNotOk", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = "Ошибка при GetRandomJoke :(";
+                });
+            });
+            #endregion
+
+            #region Get Random Ten Methods
+            _hubConnectionWrapper.Connection.On("GetRandomTenClear", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = string.Empty;
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On<int, Joke>("GetRandomTenPostOneJoke", (index, joke) =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On("GetRandomTenNotOk", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = "Ошибка при GetRandomTen :(";
+                });
+            });
+            #endregion
+
+            #region Get Random Jokes Methods
+            _hubConnectionWrapper.Connection.On<Joke>("GetRandomJokesOk", (joke) =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On("GetRandomJokesNotOk", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = "Ошибка при GetRandomJokes :(";
+                });
+            });
+            #endregion
+
+            #region Get Ten Jokes Methods
+            _hubConnectionWrapper.Connection.On("GetTenJokesClear", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = string.Empty;
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On<int, Joke>("GetTenJokesPostOneJoke", (index, joke) =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
+                });
+            });
+
+            _hubConnectionWrapper.Connection.On("GetTenJokesNotOk", () =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    DisplayedJoke = "Ошибка при GetTenJokes :(";
+                });
+            });
+            #endregion
         }
 
         #region Move Windows Region
@@ -77,100 +173,53 @@ namespace ThirdStage.ViewModels
         #region Jokes Functions Region
         private async Task GetRandomJoke()
         {
-            string? deserializedJoke = await GetRequestData("random_joke");
-            if (deserializedJoke != null)
+            IsLoading = true;
+            try
             {
-                Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
-
-                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
-
-                DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
-                db.Jokes.AddRange(joke);
-                db.SaveChanges();
+                await _hubConnectionWrapper.GetRandomJoke();
             }
-            else
+            finally
             {
-                DisplayedJoke = "Ошибка при GetRandomJoke :(";
+                IsLoading = false;
             }
         }
 
         private async Task GetRandomTen()
         {
-            string? deserializedJokes = await GetRequestData("random_ten");
-            if (deserializedJokes != null)
+            IsLoading = true;
+            try
             {
-                List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
-
-                DisplayedJoke = string.Empty;
-                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
-                foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
-                {
-                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
-                    db.Jokes.AddRange(joke);
-                }
-                db.SaveChanges();
+                await _hubConnectionWrapper.GetRandomTen();
             }
-            else
+            finally
             {
-                DisplayedJoke = "Ошибка при GetRandomTen :(";
+                IsLoading = false;
             }
         }
 
         private async Task GetRandomJokes()
         {
-            string? deserializedJoke = await GetRequestData("jokes/random");
-            if (deserializedJoke != null)
+            IsLoading = true;
+            try
             {
-                Joke joke = JsonSerializer.Deserialize<Joke>(deserializedJoke);
-
-                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
-
-                DisplayedJoke = $"{joke.Setup} {joke.Punchline}";
-                db.Jokes.AddRange(joke);
-                db.SaveChanges();
+                await _hubConnectionWrapper.GetRandomJokes();
             }
-            else
+            finally
             {
-                DisplayedJoke = "Ошибка при GetRandomJokes :(";
+                IsLoading = false;
             }
         }
 
         private async Task GetTenJokes()
         {
-            string? deserializedJokes = await GetRequestData("jokes/ten");
-            if (deserializedJokes != null)
-            {
-                List<Joke> jokes = JsonSerializer.Deserialize<List<Joke>>(deserializedJokes);
-
-                DisplayedJoke = string.Empty;
-                using ApplicationContext db = _servicesProvider.GetRequiredService<ApplicationContext>();
-                foreach (var (joke, index) in jokes.Select((joke, index) => (joke, index)))
-                {
-                    DisplayedJoke += $"{index + 1}. {joke.Setup} {joke.Punchline}\n\n";
-                    db.Jokes.AddRange(joke);
-                }
-                db.SaveChanges();
-            }
-            else
-            {
-                DisplayedJoke = "Ошибка при GetTenJokes :(";
-            }
-        }
-
-        private async Task<string?> GetRequestData(string endpoint)
-        {
+            IsLoading = true;
             try
             {
-                using HttpResponseMessage response = await client.GetAsync($"https://official-joke-api.appspot.com/{endpoint}");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                return responseBody;
+                await _hubConnectionWrapper.GetTenJokes();
             }
-            catch (HttpRequestException e)
+            finally
             {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-                return null;
+                IsLoading = false;
             }
         }
         #endregion

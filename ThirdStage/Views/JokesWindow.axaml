@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:vm="using:ThirdStage.ViewModels"
+             xmlns:conv="using:ThirdStage.Converters"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +8,16 @@
              x:Class="ThirdStage.JokesWindow"
              x:DataType="vm:JokesWindowViewModel">
 
+  <UserControl.Resources>
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+  </UserControl.Resources>
+  
   <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"></ColumnDefinition>
       <ColumnDefinition Width="*"></ColumnDefinition>
@@ -55,6 +65,16 @@
         <TextBlock>Ten Jokes</TextBlock>
       </Button>
     </StackPanel>
+
+    <ProgressBar Grid.Row="1" Grid.Column="1"
+                 IsVisible="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                 Width="200"
+                 Height="10"
+                 VerticalAlignment="Bottom"
+                 HorizontalAlignment="Center"
+                 Margin="0, 20"
+                 IsIndeterminate="True"
+                 Foreground="Aqua" />
   </Grid>
 
 </UserControl>
